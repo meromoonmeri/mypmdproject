@@ -1,0 +1,104 @@
+{
+  "role": "apparition du badge de resultat : ruee vers le portail, materialisation d'energie, impact, depot du badge",
+  "ecran_logique": "320x240, agrandissement ENTIER (PMDO)",
+  "regle": "burst() est joue UNE FOIS sur l'action du joueur ; idle() boucle ensuite indefiniment. Aucun timer ne declenche la bascule.",
+  "jointure": "burst(1.0) == idle(0.0) au bit pres, verifie par test",
+  "loops": [
+    {
+      "nom": "burst",
+      "type": "one-shot",
+      "frames": 48,
+      "fps": 24,
+      "duree_s": 2.0,
+      "debut": 0,
+      "fin": 47,
+      "point_de_boucle": "aucun - enchaine sur idle a la frame finale",
+      "declencheur": "touche CONTINUER / validation du joueur",
+      "couches": [
+        {
+          "nom": "rays",
+          "plaque": "plate_rays.png",
+          "role": "lignes de vitesse, ruee vers le portail",
+          "pic_u": 0.2,
+          "gain": 1.15,
+          "echelle": "2.05 -> 0.55 (balayage vers l'exterieur)"
+        },
+        {
+          "nom": "portal",
+          "plaque": "plate_portal_tunnel.png",
+          "role": "le portail grandit puis nous avale",
+          "entree_u": 0.0,
+          "plein_u": 0.45,
+          "sortie_u": 0.68,
+          "echelle": "2.05 -> 0.42"
+        },
+        {
+          "nom": "motes",
+          "plaque": "plate_motes.png",
+          "role": "materialisation : l'energie converge au centre",
+          "entree_u": 0.3,
+          "sortie_u": 0.74,
+          "echelle": "0.6 -> 2.9",
+          "rotation_tours": -1.25,
+          "teinte": "vire vers la couleur de la nature en approchant"
+        },
+        {
+          "nom": "flash",
+          "role": "voile blanc d'impact",
+          "pic_u": 0.7,
+          "largeur": 0.05,
+          "gain": 0.92
+        },
+        {
+          "nom": "shockwave",
+          "plaque": "plate_shockwave.png",
+          "role": "onde de choc qui s'ouvre",
+          "pic_u": 0.735,
+          "largeur": 0.055,
+          "echelle": "3.0 -> 0.75"
+        },
+        {
+          "nom": "ribbon+badge",
+          "source": "soulhalo.ribbon",
+          "role": "le ruban et le badge oeuf-et-ailes se posent",
+          "entree_u": 0.66,
+          "pose_u": 0.9,
+          "charge": "1 -> 0 : arrive gonfle d'energie puis se calme"
+        },
+        {
+          "nom": "panel_dx",
+          "role": "bandeau nom + nature",
+          "entree_u": 0.9,
+          "style": "MenuFrame du moteur, fonte bitmap 5x7"
+        }
+      ]
+    },
+    {
+      "nom": "idle",
+      "type": "boucle",
+      "frames": 40,
+      "fps": 24,
+      "duree_s": 1.67,
+      "debut": 0,
+      "fin": 39,
+      "point_de_boucle": "frame 0 - render(0.0) == render(1.0)",
+      "declencheur": "aucun : tourne tant que le joueur reste",
+      "couches": [
+        {
+          "nom": "ribbon",
+          "role": "ruban qui tourne, respire",
+          "tours_par_boucle": "entiers (spin 1, contre-spin -2)"
+        },
+        {
+          "nom": "badge",
+          "role": "flottement 1 cycle par boucle"
+        },
+        {
+          "nom": "panel_dx",
+          "role": "bandeau nom + nature"
+        }
+      ]
+    }
+  ],
+  "couleur": "pilotee par la nature (natures.json), badge et motes teintes"
+}
