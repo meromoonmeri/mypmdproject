@@ -34,6 +34,7 @@ import numpy as np
 from PIL import Image
 
 from . import field as F
+from . import pixelart as PX
 
 TAU = F.TAU
 _HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -128,6 +129,13 @@ class MenuStyle:
     # texture
     hatch: float = 0.06
     radius: int = 3
+    # relief 2.5D
+    bevel: float = 0.22          # arête éclairée en haut-gauche
+    shade: float = 0.20          # arête d'ombre en bas-droite
+    shadow: float = 0.42         # ombre portée
+    shadow_dx: int = 2
+    shadow_dy: int = 2
+    dither_levels: int = 16      # paliers par canal (0 = pas de tramage)
 
 
 class MenuFrame:
@@ -182,11 +190,27 @@ class MenuFrame:
         col = col * (1.0 - light[..., None] * 0.55) + \
             np.array(s.border_in, np.float32) * (light[..., None] * 0.55)
 
+        # relief 2.5D : le panneau est ECLAIRE en haut-gauche et ombre en
+        # bas-droite. C'est ce qui le fait paraitre pose SUR l'ecran plutot
+        # que peint dedans.
+        if s.bevel > 0 or s.shade > 0:
+            col = PX.emboss(col, inner, light=s.bevel, shade=s.shade)
+        # tramage : les degrades doivent etre trames AVANT l'agrandissement,
+        # sinon on obtient des aplats en bandes.
+        if s.dither_levels:
+            col = PX.dither(col, levels=s.dither_levels, strength=0.85)
+
         # decoupe a l'ecran
         x1, y1 = max(0, x), max(0, y)
         x2, y2 = min(W, x + w), min(H, y + h)
         if x2 <= x1 or y2 <= y1:
             return
+        # ombre portee : posee sur le FOND, hors de la forme
+        if s.shadow > 0:
+            sm = np.zeros((H, W), np.float32)
+            sm[y1:y2, x1:x2] = m[y1 - y:y2 - y, x1 - x:x2 - x]
+            buf[:] = PX.drop_shadow(buf, sm, dx=s.shadow_dx, dy=s.shadow_dy,
+                                    opacity=s.shadow)
         sub = col[y1 - y:y2 - y, x1 - x:x2 - x]
         sa = (m[y1 - y:y2 - y, x1 - x:x2 - x] * a)[..., None]
         buf[y1:y2, x1:x2] = buf[y1:y2, x1:x2] * (1.0 - sa) + sub * sa

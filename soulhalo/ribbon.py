@@ -280,8 +280,20 @@ def paste_reveal(bg: np.ndarray, portrait: Image.Image | None,
     # la silhouette se resorbe sur la premiere moitie de la revelation
     sil = float(np.clip(1.0 - u * 1.8, 0.0, 1.0))
     blit(sprite, w * 0.5, h * 0.54, scale, min(1.0, u * 2.2), sil)
-    blit(portrait, w * 0.5, h * 0.235, max(1, scale - 1),
-         float(np.clip((u - 0.35) / 0.5, 0.0, 1.0)), sil * 0.6)
+
+    # Le portrait est ENCADRE, comme partout dans DX : aucun portrait n'y
+    # flotte a nu sur le decor. Le cadre apparait avec lui.
+    pu = float(np.clip((u - 0.35) / 0.5, 0.0, 1.0))
+    if portrait is not None and pu > 0.01:
+        from .dxui import MenuFrame
+        k = max(1, scale - 1)
+        pw, ph = portrait.width * k, portrait.height * k
+        px = int(w * 0.5 - pw / 2)
+        py = int(h * 0.235 - ph / 2)
+        pad = max(2, k)
+        MenuFrame().panel(out, px - pad, py - pad, pw + 2 * pad,
+                          ph + 2 * pad, radius=max(2, k), alpha=pu * 0.95)
+    blit(portrait, w * 0.5, h * 0.235, max(1, scale - 1), pu, sil * 0.6)
     return np.clip(out, 0.0, 1.0)
 
 

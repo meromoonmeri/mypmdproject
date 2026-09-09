@@ -1,0 +1,47 @@
+{
+  "role": "test de personnalite : une question = un etat independant",
+  "regle_or": "le joueur ne voit JAMAIS de points. Le bandeau « QUESTION 3 / 8 » est un repere de progression, pas un score.",
+  "progression": "uniquement par valider() ; aucun timer ne change d'etat. Le fond boucle pendant la reflexion.",
+  "banque": 18,
+  "tirage": 8,
+  "natures": 13,
+  "equilibrage": "ratio max/min de la distribution ramene de 21.6x a 2.0x en repartissant les poids : 'calm' servait de reponse prudente par defaut dans 11 questions sur 18",
+  "loops": [
+    {
+      "nom": "question",
+      "type": "boucle",
+      "frames": 40,
+      "fps": 20,
+      "duree_s": 2.0,
+      "point_de_boucle": "frame 0 - render(0.0) == render(1.0)",
+      "declencheur": "aucun : tourne tant que le joueur reflechit"
+    },
+    {
+      "nom": "parcours",
+      "type": "demonstration",
+      "frames": 48,
+      "fps": 12,
+      "declencheur": "valider() a chaque question"
+    }
+  ],
+  "pixel_art": {
+    "tramage": "Bayer 4x4, 14 paliers, applique AVANT l'agrandissement",
+    "relief": "emboss 2.5D : lumiere haut-gauche, ombre bas-droite",
+    "ombre_portee": "decalee 2px, trame, jamais floue",
+    "agrandissement": "entier, plus proche voisin"
+  },
+  "resultat_exemple": {
+    "nature": "calm",
+    "fr": "Calme",
+    "rgb": [
+      0.34,
+      0.76,
+      0.94
+    ],
+    "accent": [
+      0.7,
+      0.94,
+      1.0
+    ]
+  }
+}
