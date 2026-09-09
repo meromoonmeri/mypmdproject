@@ -1,0 +1,56 @@
+{
+  "nom": "DREAM_HALO_RAINBOW_LOOP",
+  "type": "boucle cyclique exacte (pas de ping-pong necessaire)",
+  "frames": 36,
+  "fps": 12,
+  "duree_s": 3.0,
+  "frame_depart": 0,
+  "frame_fin": 35,
+  "point_de_boucle": "frame_035 -> frame_000 (raccord exact, phase 1.0 == phase 0.0)",
+  "arc_en_ciel_anime": {
+    "methode": "rotation de teinte YIQ le long du rayon",
+    "cycles_par_boucle": 1,
+    "raccord": "entier de cycles => derniere frame identique a la premiere"
+  },
+  "couches": [
+    {
+      "nom": "ring_01",
+      "couche": "ANNEAU 01",
+      "rotation": "+1 tour/boucle (horaire, lente)",
+      "scale": 1.0,
+      "opacite": 1.0,
+      "parallaxe": 0.3,
+      "effet": "arc-en-ciel defilant"
+    },
+    {
+      "nom": "ring_02",
+      "couche": "ANNEAU 02",
+      "rotation": "-2 tours/boucle (inverse)",
+      "scale": 0.62,
+      "opacite": 0.85,
+      "parallaxe": 0.5,
+      "effet": "arc-en-ciel defilant"
+    },
+    {
+      "nom": "rays",
+      "couche": "ANNEAU 03",
+      "rotation": "+1 tour/boucle",
+      "scale": 1.0,
+      "opacite": 0.7,
+      "parallaxe": 0.4,
+      "effet": "rayons fins"
+    },
+    {
+      "nom": "core",
+      "couche": "ANNEAU 06 - halo blanc central",
+      "rotation": 0,
+      "scale": 1.0,
+      "opacite": "0.55 -> 1.00 pulsation",
+      "parallaxe": 0.6,
+      "effet": "pulsation lumineuse, 1 cycle par boucle"
+    }
+  ],
+  "position": "centre, deborde volontairement de l'ecran",
+  "transition": "declenchee par le dialogue uniquement, jamais par timer",
+  "resolution": "1280x720"
+}

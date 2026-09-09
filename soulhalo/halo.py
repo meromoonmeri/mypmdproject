@@ -48,6 +48,8 @@ class Layer:
     breathe: float = 0.0   # respiration du rayon (en unités de rayon)
     lobes: int = 0         # ondulation angulaire (0 = anneau lisse)
     lobe_amp: float = 0.0  # amplitude de l'ondulation
+    hue_offset: float = 0.0  # décalage de teinte propre à la couronne (tours)
+    rad_offset: float = 0.0  # décalage de lecture radiale dans la plaque
 
 
 @dataclass(frozen=True)
@@ -102,6 +104,9 @@ class HaloParams:
     bloom: float = 0.30         # intensité du voile lumineux
     exposure: float = 1.05
     saturation: float = 1.85    # ravive les teintes noyées par l'addition
+    plate_offset: float = 0.0   # évite le cœur sombre d'une plaque en anneaux
+    rainbow: int = 0            # cycles de teinte par boucle — ENTIER (0 = éteint)
+    rainbow_spread: float = 1.0  # étalement du spectre entre les couronnes
     spikes: int = 8             # branches d'étoile autour de l'âme
     spike_len: float = 0.72
     spike_strength: float = 0.55
@@ -156,7 +161,8 @@ class HaloRenderer:
         # teintes. On garde donc la couleur et on ne somme que les poids.
         acc = np.zeros((self.h, self.w, 3), np.float32)
         wsum = np.zeros((self.h, self.w), np.float32)
-        for L in p.layers:
+        nlayers = max(1, len(p.layers))
+        for li, L in enumerate(p.layers):
             rad = L.radius
             if L.breathe:
                 rad += L.breathe * float(np.cos(TAU * phase))
@@ -166,7 +172,17 @@ class HaloRenderer:
                 rr = rn - L.lobe_amp * np.cos(L.lobes * th - TAU * L.speed * phase)
             m = F.ring(rr, rad, L.width) * np.float32(L.alpha)
             col = F.sample_strip(self.strip, rn, th,
-                                 rot=L.speed * phase, rad_scale=L.rad_scale)
+                                 rot=L.speed * phase, rad_scale=L.rad_scale,
+                                 rad_offset=L.rad_offset + p.plate_offset)
+            # ARC-EN-CIEL DANS LA PARALLAXE : chaque couronne reçoit sa
+            # propre teinte, décalée le long du spectre, et l'ensemble
+            # défile avec la phase. Comme `rainbow` est un ENTIER de cycles
+            # par boucle et que hue_rotate d'un tour entier est l'identité
+            # exacte, le bouclage reste intact.
+            if p.rainbow:
+                spread = p.rainbow_spread * li / nlayers
+                acc_turns = p.rainbow * phase + spread + L.hue_offset
+                col = F.hue_rotate(col, acc_turns)
             acc += col * m[..., None]
             wsum += m
         rgb = acc / np.maximum(wsum, 1e-4)[..., None]

@@ -15,3 +15,6 @@ output/*/ase/
 
 # rendus soulhalo (regenerables via `python -m soulhalo.cli`)
 output/soulhalo/frames/
+
+# rendus regenerables (python -m soulhalo.cli)
+output/soulhalo*/frames/

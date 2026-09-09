@@ -19,7 +19,9 @@ def build_params(a) -> HaloParams:
                       orbit_turns=a.orbit_turns, radius=a.soul,
                       trail=a.trail)
     return HaloParams(layers=layers, soul=soul, saturation=a.saturation,
-                      grain=a.grain, bloom=a.bloom)
+                      grain=a.grain, bloom=a.bloom,
+                      rainbow=a.rainbow, rainbow_spread=a.rainbow_spread,
+                      plate_offset=a.plate_offset, core_dark=a.core_dark)
 
 
 def main(argv=None) -> int:
@@ -45,6 +47,14 @@ def main(argv=None) -> int:
     p.add_argument("--saturation", type=float, default=1.85)
     p.add_argument("--grain", type=float, default=0.030)
     p.add_argument("--bloom", type=float, default=0.30)
+    p.add_argument("--rainbow", type=int, default=1,
+                   help="cycles d'arc-en-ciel par boucle - ENTIER (0 = eteint)")
+    p.add_argument("--rainbow-spread", type=float, default=1.0,
+                   help="etalement du spectre entre les couronnes")
+    p.add_argument("--plate-offset", type=float, default=0.0,
+                   help="decale la lecture radiale (evite un coeur sombre)")
+    p.add_argument("--core-dark", type=float, default=0.30,
+                   help="rayon du puits sombre central")
     p.add_argument("--no-gif", action="store_true")
     p.add_argument("--sheet", action="store_true", help="planche contact 4xN")
     a = p.parse_args(argv)

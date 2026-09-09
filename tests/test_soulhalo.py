@@ -153,3 +153,110 @@ def test_parametres_personnalises():
                    saturation=1.0, grain=0.0)
     rr = HaloRenderer(PLATE, w=120, h=120, params=p)
     assert np.array_equal(rr.render(0.0), rr.render(1.0))
+
+
+# --- arc-en-ciel anime dans la parallaxe ----------------------------------
+RAINBOW_PLATE = "research/plates/plate_rainbow_rings.png"
+
+
+def test_hue_rotate_tour_entier_est_identite():
+    """Indispensable au bouclage : sans identite exacte a 1 tour, la
+    derniere frame ne se raccorde plus a la premiere."""
+    rng = np.random.default_rng(0)
+    x = rng.random((32, 32, 3)).astype(np.float32)
+    for turns in (0.0, 1.0, -1.0, 2.0, -3.0):
+        assert np.allclose(F.hue_rotate(x, turns), x, atol=1e-5), turns
+
+
+def test_hue_rotate_preserve_la_luminance():
+    rng = np.random.default_rng(1)
+    x = rng.random((32, 32, 3)).astype(np.float32)
+    w = np.array([0.299, 0.587, 0.114], np.float32)
+    y = F.hue_rotate(x, 0.37)
+    assert np.abs((y * w).sum(2) - (x * w).sum(2)).max() < 1e-4
+
+
+def test_hue_rotate_change_bien_la_teinte():
+    x = np.full((8, 8, 3), 0.0, np.float32)
+    x[..., 0] = 0.9
+    assert np.abs(F.hue_rotate(x, 1 / 3.0) - x).mean() > 0.05
+
+
+def test_rainbow_boucle_exactement():
+    r = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                     params=HaloParams(rainbow=1, plate_offset=0.30))
+    assert np.array_equal(r.render(0.0), r.render(1.0))
+
+
+def test_rainbow_cycles_entiers():
+    assert float(HaloParams().rainbow).is_integer()
+    assert float(HaloParams(rainbow=1).rainbow).is_integer()
+
+
+def test_rainbow_eteint_par_defaut():
+    """L'arc-en-ciel ne doit pas s'imposer aux rendus existants : sur une
+    plaque peinte il peut rendre une couronne aussi vive que l'ame."""
+    assert HaloParams().rainbow == 0
+
+
+def test_rainbow_fait_defiler_la_teinte():
+    r = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                     params=HaloParams(rainbow=1, plate_offset=0.30))
+    assert np.abs(r.render(0.0) - r.render(1 / 3.0)).mean() > 0.02
+
+
+def test_rainbow_desactivable():
+    p = HaloParams(rainbow=0, plate_offset=0.30)
+    r = HaloRenderer(RAINBOW_PLATE, w=W, h=H, params=p)
+    assert np.array_equal(r.render(0.0), r.render(1.0))
+
+
+def test_rainbow_etale_le_spectre_entre_couronnes():
+    """L'arc-en-ciel doit etre DANS la parallaxe : des couronnes de rayons
+    differents doivent porter des teintes differentes."""
+    import colorsys
+    r = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                     params=HaloParams(rainbow=1, plate_offset=0.30))
+    a = r.render(0.0)
+    h, w = a.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w]
+    rr = np.hypot(yy - h / 2, xx - w / 2) / (min(h, w) / 2)
+    hues = []
+    for lo in (0.15, 0.45, 0.75):
+        c = a[(rr >= lo) & (rr < lo + 0.2)].mean(0)
+        hues.append(colorsys.rgb_to_hsv(*c)[0] * 360)
+    spread = max(hues) - min(hues)
+    assert spread > 40, f"spectre trop resserre : {spread:.0f} deg"
+
+
+def test_rainbow_reste_sature():
+    r = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                     params=HaloParams(rainbow=1, plate_offset=0.30))
+    a = r.render(0.0)
+    mx, mn = a.max(2), a.min(2)
+    vis = mx > 0.05
+    assert float(((mx - mn) / np.maximum(mx, 1e-6))[vis].mean()) > 0.35
+
+
+def test_rainbow_sans_a_coup():
+    r = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                     params=HaloParams(rainbow=1, plate_offset=0.30))
+    n = 12
+    fr = [r.render(i / n) for i in range(n)]
+    d = [float(np.abs(fr[i] - fr[(i + 1) % n]).mean()) for i in range(n)]
+    assert max(d) / (sum(d) / len(d)) < 1.6
+
+
+def test_plate_offset_evite_le_coeur_sombre():
+    """Sans decalage, toutes les couronnes lisent le coeur sombre de la
+    plaque en anneaux et la couleur s'effondre."""
+    base = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                        params=HaloParams(rainbow=1, plate_offset=0.0)).render(0.0)
+    off = HaloRenderer(RAINBOW_PLATE, w=W, h=H,
+                       params=HaloParams(rainbow=1, plate_offset=0.30)).render(0.0)
+
+    def sat(a):
+        mx, mn = a.max(2), a.min(2)
+        v = mx > 0.05
+        return float(((mx - mn) / np.maximum(mx, 1e-6))[v].mean())
+    assert sat(off) > sat(base)

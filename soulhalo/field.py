@@ -133,17 +133,51 @@ def polar_strip(path: str, n_theta: int = 1024, n_rad: int = 384,
     return a[y0, x0]
 
 
-def sample_strip(strip: np.ndarray, rn, th, rot: float, rad_scale: float = 1.0):
+def sample_strip(strip: np.ndarray, rn, th, rot: float, rad_scale: float = 1.0,
+                 rad_offset: float = 0.0):
     """
     Échantillonne la bande polaire pour chaque pixel.
 
     `rot` est en tours (1.0 = un tour complet) : un entier par boucle garantit
     le raccord exact de l'animation.
+
+    `rad_offset` décale la lecture vers l'extérieur de la plaque. Utile quand
+    la plaque possède un cœur sombre (cas d'un halo peint) : sans décalage,
+    toutes les couronnes lisent ce cœur et laissent une tache centrale.
     """
     n_rad, n_theta = strip.shape[:2]
     # Le modulo est applique APRES conversion entiere : en float32, une
     # valeur juste sous n_theta peut s'arrondir a n_theta et deborder.
     ti = ((th / np.float32(TAU) + np.float32(rot)) * n_theta)
     ti = np.mod(ti.astype(np.int64), n_theta).astype(np.int32)
-    ri = np.clip((rn * np.float32(rad_scale)) * (n_rad - 1), 0, n_rad - 1).astype(np.int32)
+    rr = np.float32(rad_offset) + rn * np.float32(rad_scale)
+    ri = np.clip(rr * (n_rad - 1), 0, n_rad - 1).astype(np.int32)
     return strip[ri, ti]
+
+
+# YIQ hue rotation matrices, precomputed constants
+_YIQ_FWD = np.array([[0.299, 0.587, 0.114],
+                     [0.596, -0.274, -0.322],
+                     [0.211, -0.523, 0.312]], np.float32)
+# Inverse exacte, calculée et non recopiée : les constantes YIQ arrondies
+# que l'on trouve partout ne sont pas de vraies inverses, et l'erreur
+# résiduelle empêcherait la rotation d'un tour entier d'être l'identité —
+# donc empêcherait le bouclage exact.
+_YIQ_INV = np.linalg.inv(_YIQ_FWD.astype(np.float64)).astype(np.float32)
+
+
+def hue_rotate(rgb: np.ndarray, turns: float) -> np.ndarray:
+    """Fait tourner la teinte de `turns` tours (1.0 = spectre complet).
+
+    Passe par YIQ : la luminance Y est laissée intacte, seul le plan de
+    chrominance (I,Q) tourne. Les valeurs sombres restent donc sombres et
+    la structure lumineuse du halo n'est pas modifiée — seule la couleur
+    change. `turns` entier => rotation identité, d'où un bouclage exact.
+    """
+    a = float(turns) * TAU
+    c, s = np.cos(a), np.sin(a)
+    rot = np.array([[1.0, 0.0, 0.0],
+                    [0.0, c, -s],
+                    [0.0, s, c]], np.float32)
+    m = (_YIQ_INV @ rot @ _YIQ_FWD).T.astype(np.float32)
+    return rgb @ m
