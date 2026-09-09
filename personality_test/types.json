@@ -1,0 +1,37 @@
+{
+  "note": "Couleur d'aura par type. Sert au halo qui se degage du sprite choisi.",
+  "types": {
+    "grass":    {"fr": "Plante",   "rgb": [0.42, 0.85, 0.36]},
+    "fire":     {"fr": "Feu",      "rgb": [0.98, 0.45, 0.14]},
+    "water":    {"fr": "Eau",      "rgb": [0.30, 0.62, 0.98]},
+    "electric": {"fr": "Electrik", "rgb": [1.00, 0.85, 0.20]},
+    "normal":   {"fr": "Normal",   "rgb": [0.85, 0.83, 0.72]},
+    "fighting": {"fr": "Combat",   "rgb": [0.86, 0.34, 0.28]},
+    "psychic":  {"fr": "Psy",      "rgb": [0.98, 0.42, 0.68]},
+    "dark":     {"fr": "Tenebres", "rgb": [0.40, 0.32, 0.40]},
+    "steel":    {"fr": "Acier",    "rgb": [0.72, 0.76, 0.84]},
+    "fairy":    {"fr": "Fee",      "rgb": [0.98, 0.68, 0.88]},
+    "ice":      {"fr": "Glace",    "rgb": [0.62, 0.92, 0.96]},
+    "ground":   {"fr": "Sol",      "rgb": [0.86, 0.72, 0.42]},
+    "rock":     {"fr": "Roche",    "rgb": [0.76, 0.68, 0.42]},
+    "flying":   {"fr": "Vol",      "rgb": [0.66, 0.74, 0.96]},
+    "bug":      {"fr": "Insecte",  "rgb": [0.66, 0.80, 0.28]},
+    "poison":   {"fr": "Poison",   "rgb": [0.72, 0.44, 0.82]},
+    "ghost":    {"fr": "Spectre",  "rgb": [0.52, 0.44, 0.76]},
+    "dragon":   {"fr": "Dragon",   "rgb": [0.44, 0.42, 0.94]}
+  },
+  "roster": [
+    {"dex": "0001", "nom": "Bulbizarre", "type": "grass"},
+    {"dex": "0004", "nom": "Salameche",  "type": "fire"},
+    {"dex": "0007", "nom": "Carapuce",   "type": "water"},
+    {"dex": "0025", "nom": "Pikachu",    "type": "electric"},
+    {"dex": "0133", "nom": "Evoli",      "type": "normal"},
+    {"dex": "0152", "nom": "Germignon",  "type": "grass"},
+    {"dex": "0155", "nom": "Hericendre", "type": "fire"},
+    {"dex": "0158", "nom": "Kaiminus",   "type": "water"},
+    {"dex": "0252", "nom": "Arcko",      "type": "grass"},
+    {"dex": "0255", "nom": "Poussifeu",  "type": "fire"},
+    {"dex": "0258", "nom": "Gobou",      "type": "water"},
+    {"dex": "0447", "nom": "Riolu",      "type": "fighting"}
+  ]
+}

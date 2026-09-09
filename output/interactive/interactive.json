@@ -1,0 +1,27 @@
+{
+  "principe": "La souris pilote le POINT DE VUE et le carrousel. Elle ne fait jamais avancer le temps.",
+  "dream_idle": {
+    "frames": 36,
+    "fps": 20,
+    "type": "boucle infinie",
+    "raccord": "exact",
+    "effet": "parallaxe circulaire, spectre de teinte defilant (1 tour/boucle)"
+  },
+  "dream_look": {
+    "frames": 36,
+    "fps": 20,
+    "type": "boucle infinie + entree souris",
+    "look": "x,y dans [-1,1] lisses ; les plans proches bougent plus que les lointains"
+  },
+  "carousel": {
+    "frames": 36,
+    "fps": 20,
+    "type": "boucle infinie + entree souris",
+    "pos": "position continue (3.0 = 4e centre)",
+    "hover": "halo arc-en-ciel",
+    "selected": "aura de la couleur du type",
+    "sprites": "animes selon les durees d'AnimData.xml"
+  },
+  "types": "personality_test/types.json",
+  "roster": 12
+}
