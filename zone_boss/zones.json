@@ -1,0 +1,184 @@
+{
+  "source": "Table des boss de Pokemon Mystery Dungeon: Rescue Team DX, relevee sur Bulbapedia (page du jeu, section Bosses). Les etages viennent des guides GameWith et Serebii.",
+  "moteur": "PMDO / RogueEssence : tuiles de 24x24, ecran logique 320x240, agrandissement ENTIER.",
+  "layers": [
+    {"id": 0, "nom": "ciel", "role": "fond lointain, ne defile presque pas", "parallaxe": 0.15},
+    {"id": 1, "nom": "lointain", "role": "silhouettes de decor, montagnes, structures", "parallaxe": 0.4},
+    {"id": 2, "nom": "sol", "role": "TILESET jouable : sol, murs, bordures (autotile 3x3)", "parallaxe": 1.0},
+    {"id": 3, "nom": "props", "role": "elements poses sur le sol : rochers, cristaux, flammes", "parallaxe": 1.0},
+    {"id": 4, "nom": "fx", "role": "couche additive : lueur, particules, brume", "parallaxe": 1.1}
+  ],
+  "zones": [
+    {
+      "legendaire": "Rayquaza", "dex": "0384", "type": ["dragon", "vol"],
+      "donjon_en": "Sky Tower Summit", "donjon_fr": "Sommet de la Tour Celeste",
+      "etage": "34F", "niveau": 33, "arc": "principal",
+      "cataclysme": "De grandes rafales de vent se levent dans le donjon. Les Pokemon touches sont deplaces.",
+      "biome": "tour de pierre ancienne au-dessus des nuages",
+      "palette": ["#1b2f5e", "#3a5fa8", "#8fb8e8", "#d9e6f5", "#6b7a52", "#2e3a24"],
+      "ambiance": "ciel d'altitude, nuages qui defilent, vent"
+    },
+    {
+      "legendaire": "Groudon", "dex": "0383", "type": ["sol"],
+      "donjon_en": "Magma Cavern Pit", "donjon_fr": "Fond de la Caverne Magma",
+      "etage": "B26F", "niveau": 28, "arc": "principal",
+      "cataclysme": "Le magma jaillit du sol. Le sol tremble et les Pokemon sont deplaces. Tout Pokemon non Feu qui touche le magma est brule.",
+      "biome": "caverne de magma, roche noire fissuree",
+      "palette": ["#1a0d08", "#4a1f0c", "#a33a10", "#ff7a1a", "#ffd24a", "#2b1810"],
+      "ambiance": "coulees de lave, braises qui montent, chaleur"
+    },
+    {
+      "legendaire": "Zapdos", "dex": "0145", "type": ["electrik", "vol"],
+      "donjon_en": "Mt. Thunder Peak", "donjon_fr": "Pic du Mont Tonnerre",
+      "etage": "13F", "niveau": 17, "arc": "principal",
+      "cataclysme": null,
+      "biome": "sommet rocheux battu par l'orage",
+      "palette": ["#141a2e", "#2c3a5c", "#5f6f9c", "#f2e14a", "#fdfbe0", "#3b3020"],
+      "ambiance": "ciel d'orage, eclairs, pluie battante"
+    },
+    {
+      "legendaire": "Moltres", "dex": "0146", "type": ["feu", "vol"],
+      "donjon_en": "Mt. Blaze Peak", "donjon_fr": "Pic du Mont Brasier",
+      "etage": "15F", "niveau": 20, "arc": "principal",
+      "cataclysme": null,
+      "biome": "sommet volcanique, cendres et roche brulee",
+      "palette": ["#2a1410", "#5c2a14", "#b8501c", "#ff9a3c", "#ffe08a", "#7a3a1e"],
+      "ambiance": "cendres qui tombent, lueur orange, fumee"
+    },
+    {
+      "legendaire": "Articuno", "dex": "0144", "type": ["glace", "vol"],
+      "donjon_en": "Heart of the Frosty Forest", "donjon_fr": "Coeur de la Foret Gelee",
+      "etage": "14F", "niveau": 22, "arc": "principal",
+      "cataclysme": null,
+      "biome": "clairiere gelee, arbres givres, glace bleue",
+      "palette": ["#0e1c30", "#2a4a72", "#6fa8d6", "#bfe4f5", "#ffffff", "#1a3350"],
+      "ambiance": "neige qui tombe, brume froide, cristaux"
+    },
+    {
+      "legendaire": "Kyogre", "dex": "0382", "type": ["eau"],
+      "donjon_en": "Stormy Sea", "donjon_fr": "Mer Dechainee",
+      "etage": "B40F", "niveau": 40, "arc": "post-histoire",
+      "cataclysme": "Le sol du donjon est submerge. Tout Pokemon est emporte ailleurs ; les non-Eau sont ralentis.",
+      "biome": "caverne sous-marine, roche humide et courants",
+      "palette": ["#05182e", "#0d3a5c", "#1f6f96", "#4fb3c8", "#a8e6e0", "#0a2438"],
+      "ambiance": "eau en mouvement, bulles, rais de lumiere"
+    },
+    {
+      "legendaire": "Regirock", "dex": "0377", "type": ["roche"],
+      "donjon_en": "Buried Relic", "donjon_fr": "Relique Enfouie",
+      "etage": "15F", "niveau": 35, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "ruines anciennes de pierre brune",
+      "palette": ["#2a1e14", "#5a422c", "#8a6a48", "#b89a70", "#d9c49a", "#3c2c1c"],
+      "ambiance": "poussiere, glyphes graves, torches"
+    },
+    {
+      "legendaire": "Regice", "dex": "0378", "type": ["glace"],
+      "donjon_en": "Buried Relic", "donjon_fr": "Relique Enfouie",
+      "etage": "25F", "niveau": 35, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "chambre ancienne prise dans la glace",
+      "palette": ["#0c1e2e", "#1e4460", "#3f8ca8", "#8ed6e6", "#dff5fa", "#16303f"],
+      "ambiance": "givre, reflets, froid bleu"
+    },
+    {
+      "legendaire": "Registeel", "dex": "0379", "type": ["acier"],
+      "donjon_en": "Buried Relic", "donjon_fr": "Relique Enfouie",
+      "etage": "35F", "niveau": 35, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "chambre ancienne de metal poli",
+      "palette": ["#16181c", "#33383f", "#5c646e", "#8f98a3", "#c8ced6", "#22262b"],
+      "ambiance": "reflets metalliques, rivets, lueur froide"
+    },
+    {
+      "legendaire": "Latios", "dex": "0381", "type": ["dragon", "psy"],
+      "donjon_en": "Northern Range", "donjon_fr": "Chaine du Nord",
+      "etage": "25F", "niveau": 35, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "haute chaine montagneuse enneigee",
+      "palette": ["#1a2338", "#3d4f70", "#7c92b4", "#cfd9e8", "#f2f5fa", "#2a3448"],
+      "ambiance": "vent d'altitude, neige poudreuse"
+    },
+    {
+      "legendaire": "Latias", "dex": "0380", "type": ["dragon", "psy"],
+      "donjon_en": "Pitfall Valley", "donjon_fr": "Vallee du Gouffre",
+      "etage": "26F", "niveau": 35, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "gouffre vertigineux, plateformes suspendues",
+      "palette": ["#160f24", "#33224a", "#5c3f75", "#9a7ab0", "#d8c4e8", "#241838"],
+      "ambiance": "vide en dessous, courants ascendants"
+    },
+    {
+      "legendaire": "Entei", "dex": "0244", "type": ["feu"],
+      "donjon_en": "Fiery Field", "donjon_fr": "Champ Ardent",
+      "etage": "30F", "niveau": 50, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "plaine calcinee, sol craquele et braises",
+      "palette": ["#241008", "#521c0c", "#9c3a10", "#e8701c", "#ffc45a", "#3a1a0e"],
+      "ambiance": "braises au sol, air qui tremble"
+    },
+    {
+      "legendaire": "Raikou", "dex": "0243", "type": ["electrik"],
+      "donjon_en": "Lightning Field", "donjon_fr": "Champ Foudroyant",
+      "etage": "30F", "niveau": 50, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "plaine sous l'orage permanent",
+      "palette": ["#12162a", "#283454", "#4f6396", "#e8d84a", "#fdf8d0", "#2e2a1c"],
+      "ambiance": "arcs electriques, sol charge"
+    },
+    {
+      "legendaire": "Suicune", "dex": "0245", "type": ["eau"],
+      "donjon_en": "Northwind Field", "donjon_fr": "Champ du Vent du Nord",
+      "etage": "30F", "niveau": 50, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "plaine balayee par le vent du nord, aurore",
+      "palette": ["#0e1e2c", "#1f4a5e", "#3f8f92", "#8fd6c4", "#e0f5ea", "#16303a"],
+      "ambiance": "aurore boreale, vent visible, givre leger"
+    },
+    {
+      "legendaire": "Ho-Oh", "dex": "0250", "type": ["feu", "vol"],
+      "donjon_en": "Mt. Faraway", "donjon_fr": "Mont Lointain",
+      "etage": "60F", "niveau": 60, "arc": "post-histoire",
+      "cataclysme": "Tant que le maitre du donjon est baigne de lumiere, ses PV se regenerent et ses alterations disparaissent.",
+      "biome": "sommet baigne de lumiere arc-en-ciel",
+      "palette": ["#2a1e3a", "#5c3f6e", "#b06a8a", "#f0a860", "#ffe8b0", "#3a2a44"],
+      "ambiance": "colonne de lumiere, plumes, arc-en-ciel"
+    },
+    {
+      "legendaire": "Jirachi", "dex": "0385", "type": ["acier", "psy"],
+      "donjon_en": "Wish Cave", "donjon_fr": "Grotte aux Voeux",
+      "etage": "99F", "niveau": 35, "arc": "post-histoire",
+      "cataclysme": null,
+      "biome": "caverne de cristal, ciel etoile visible",
+      "palette": ["#0e1230", "#242a5c", "#4a52a0", "#8f96e0", "#e6e8ff", "#1a1e44"],
+      "ambiance": "cristaux qui brillent, etoiles filantes"
+    },
+    {
+      "legendaire": "Lugia", "dex": "0249", "type": ["psy", "vol"],
+      "donjon_en": "Silver Trench", "donjon_fr": "Fosse d'Argent",
+      "etage": "99F", "niveau": 65, "arc": "post-histoire",
+      "cataclysme": "Les Pokemon pris dans le courant sont emportes, ainsi que les objets qui flottent.",
+      "biome": "fosse abyssale, roche sombre et bioluminescence",
+      "palette": ["#03101f", "#0a2a40", "#166078", "#3aa0a8", "#9ee0d8", "#061a2a"],
+      "ambiance": "courants profonds, lueurs bleues, pression"
+    },
+    {
+      "legendaire": "Mewtwo", "dex": "0150", "type": ["psy"],
+      "donjon_en": "Western Cave", "donjon_fr": "Caverne de l'Ouest",
+      "etage": "B20F", "niveau": 70, "arc": "post-histoire",
+      "cataclysme": "Mega-evolue au hasard apres avoir perdu tous ses PV : il faut le vaincre une seconde fois.",
+      "biome": "caverne profonde et sombre, roche violacee",
+      "palette": ["#120c1c", "#2a1c3a", "#4a3260", "#7a5c96", "#c0a8d8", "#1c1428"],
+      "ambiance": "obscurite, ondes psychiques, silence"
+    },
+    {
+      "legendaire": "Deoxys", "dex": "0386", "type": ["psy"],
+      "donjon_en": "Meteor Cave", "donjon_fr": "Grotte du Meteore",
+      "etage": "20F", "niveau": 55, "arc": "post-histoire",
+      "cataclysme": "Invoque des mirages de ses autres formes pour l'aider au combat.",
+      "biome": "cratere de meteore, roche extraterrestre",
+      "palette": ["#1c0e1c", "#3a1a38", "#6e2a52", "#b04a66", "#f09ab0", "#281426"],
+      "ambiance": "pulsations organiques, poussiere d'etoile"
+    }
+  ]
+}

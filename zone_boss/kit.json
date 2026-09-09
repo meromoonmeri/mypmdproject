@@ -1,0 +1,166 @@
+{
+  "projet": "Zones de boss - Pokemon Mystery Dungeon Rescue Team DX",
+  "methode": "Un PNG transparent par calque, aux dimensions de la scene. Les ambiances sont des variantes du meme jeu de calques. Tout est decrit ici pour Tiled / Aseprite / PMDO.",
+  "moteur": {
+    "scene": [
+      320,
+      240
+    ],
+    "tuile": 24,
+    "agrandissement": "entier, plus proche voisin",
+    "note": "PMDO / RogueEssence : tuiles de 24x24, ecran logique 320x240, agrandissement ENTIER."
+  },
+  "calques": [
+    {
+      "id": "00_ciel",
+      "nom": "Ciel et fond lointain",
+      "parallaxe": 0.15,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "01_lointain",
+      "nom": "Silhouettes de decor",
+      "parallaxe": 0.4,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "02_sol",
+      "nom": "Sol jouable (tileset)",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "03_murs",
+      "nom": "Murs et bordures",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "04_props",
+      "nom": "Rochers, cristaux, elements poses",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "05_liquide",
+      "nom": "Lave, eau, glace au sol",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "06_arene",
+      "nom": "Marquage de l'arene de boss",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "07_fx",
+      "nom": "Particules et lueurs (anime)",
+      "parallaxe": 1.1,
+      "anime": true,
+      "frames": 8
+    },
+    {
+      "id": "08_eclairage",
+      "nom": "Eclairage d'ambiance",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    },
+    {
+      "id": "09_bordure",
+      "nom": "Vignette de premier plan",
+      "parallaxe": 1.0,
+      "anime": false,
+      "frames": 1
+    }
+  ],
+  "ambiances": {
+    "normal": "Normale",
+    "combat": "Combat de boss",
+    "sombre": "Approche silencieuse",
+    "cataclysme": "Cataclysme"
+  },
+  "zones": {
+    "Groudon": {
+      "legendaire": "Groudon",
+      "dex": "0383",
+      "type": [
+        "sol"
+      ],
+      "donjon": "Fond de la Caverne Magma",
+      "donjon_en": "Magma Cavern Pit",
+      "etage": "B26F",
+      "niveau": 28,
+      "arc": "principal",
+      "biome": "caverne de magma, roche noire fissuree",
+      "palette": [
+        "#1a0d08",
+        "#4a1f0c",
+        "#a33a10",
+        "#ff7a1a",
+        "#ffd24a",
+        "#2b1810"
+      ],
+      "sources": [
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Groudon/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Groudon/combat.png"
+        }
+      }
+    }
+  }
+}
