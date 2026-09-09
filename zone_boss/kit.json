@@ -89,6 +89,124 @@
     "cataclysme": "Cataclysme"
   },
   "zones": {
+    "Rayquaza": {
+      "legendaire": "Rayquaza",
+      "dex": "0384",
+      "type": [
+        "dragon",
+        "vol"
+      ],
+      "donjon": "Sommet de la Tour Celeste",
+      "donjon_en": "Sky Tower Summit",
+      "etage": "34F",
+      "niveau": 33,
+      "arc": "principal",
+      "biome": "tour de pierre ancienne au-dessus des nuages",
+      "palette": [
+        "#1b2f5e",
+        "#3a5fa8",
+        "#8fb8e8",
+        "#d9e6f5",
+        "#6b7a52",
+        "#2e3a24"
+      ],
+      "sources": [
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Rayquaza/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Rayquaza/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Rayquaza/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Rayquaza/cataclysme.png"
+        }
+      }
+    },
     "Groudon": {
       "legendaire": "Groudon",
       "dex": "0383",
@@ -159,6 +277,515 @@
             "09_bordure.png"
           ],
           "plat": "zones/Groudon/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Groudon/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Groudon/cataclysme.png"
+        }
+      }
+    },
+    "Zapdos": {
+      "legendaire": "Zapdos",
+      "dex": "0145",
+      "type": [
+        "electrik",
+        "vol"
+      ],
+      "donjon": "Pic du Mont Tonnerre",
+      "donjon_en": "Mt. Thunder Peak",
+      "etage": "13F",
+      "niveau": 17,
+      "arc": "principal",
+      "biome": "sommet rocheux battu par l'orage",
+      "palette": [
+        "#141a2e",
+        "#2c3a5c",
+        "#5f6f9c",
+        "#f2e14a",
+        "#fdfbe0",
+        "#3b3020"
+      ],
+      "sources": [
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Zapdos/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Zapdos/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Zapdos/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Zapdos/cataclysme.png"
+        }
+      }
+    },
+    "Moltres": {
+      "legendaire": "Moltres",
+      "dex": "0146",
+      "type": [
+        "feu",
+        "vol"
+      ],
+      "donjon": "Pic du Mont Brasier",
+      "donjon_en": "Mt. Blaze Peak",
+      "etage": "15F",
+      "niveau": 20,
+      "arc": "principal",
+      "biome": "sommet volcanique, cendres et roche brulee",
+      "palette": [
+        "#2a1410",
+        "#5c2a14",
+        "#b8501c",
+        "#ff9a3c",
+        "#ffe08a",
+        "#7a3a1e"
+      ],
+      "sources": [
+        "02_sol_tileset.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Moltres/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Moltres/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Moltres/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Moltres/cataclysme.png"
+        }
+      }
+    },
+    "Articuno": {
+      "legendaire": "Articuno",
+      "dex": "0144",
+      "type": [
+        "glace",
+        "vol"
+      ],
+      "donjon": "Coeur de la Foret Gelee",
+      "donjon_en": "Heart of the Frosty Forest",
+      "etage": "14F",
+      "niveau": 22,
+      "arc": "principal",
+      "biome": "clairiere gelee, arbres givres, glace bleue",
+      "palette": [
+        "#0e1c30",
+        "#2a4a72",
+        "#6fa8d6",
+        "#bfe4f5",
+        "#ffffff",
+        "#1a3350"
+      ],
+      "sources": [
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Articuno/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Articuno/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Articuno/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Articuno/cataclysme.png"
+        }
+      }
+    },
+    "Kyogre": {
+      "legendaire": "Kyogre",
+      "dex": "0382",
+      "type": [
+        "eau"
+      ],
+      "donjon": "Mer Dechainee",
+      "donjon_en": "Stormy Sea",
+      "etage": "B40F",
+      "niveau": 40,
+      "arc": "post-histoire",
+      "biome": "caverne sous-marine, roche humide et courants",
+      "palette": [
+        "#05182e",
+        "#0d3a5c",
+        "#1f6f96",
+        "#4fb3c8",
+        "#a8e6e0",
+        "#0a2438"
+      ],
+      "sources": [
+        "02_sol_tileset.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Kyogre/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Kyogre/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Kyogre/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Kyogre/cataclysme.png"
         }
       }
     }

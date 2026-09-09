@@ -11,8 +11,8 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from soulhalo import zoneassets as ZA
-from soulhalo import zonecompose as ZC
+from zonesboss import assets as ZA
+from zonesboss import compose as ZC
 
 RACINE = "zone_boss"
 
