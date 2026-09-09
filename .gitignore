@@ -1,0 +1,14 @@
+# Local Python env
+.venv/
+__pycache__/
+*.pyc
+
+# Upstream clones (huge, fetched on demand by tools/fetch_upstream.sh)
+external/
+
+# Scratch
+.tmp/
+
+# Aperçus régénérables (garde les sprites, pas les GIF lourds)
+output/*/preview/
+output/*/ase/
