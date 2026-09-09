@@ -310,3 +310,73 @@ def test_glyphes_bien_formes():
     for ch, g in _GLYPHS.items():
         assert len(g) == GLYPH_H, ch
         assert all(len(r) == GLYPH_W and set(r) <= {"0", "1"} for r in g), ch
+
+
+# --- direction artistique DX ----------------------------------------------
+def test_la_palette_est_celle_de_dx():
+    """Valeurs RELEVEES sur des captures de Rescue Team DX.
+
+    Garde-fou contre un retour au bleu nuit d'Explorers of Sky, qui est du
+    PMD classique et non du DX.
+    """
+    from soulhalo.dxui import MenuStyle
+    s = MenuStyle()
+    r, g, b = s.fill
+    assert r > g > b, "le parchemin DX est chaud"
+    assert r - b > 0.25
+    tr, tg, tb = s.teal
+    assert tb > tr and tg > tr, "le panneau secondaire DX est turquoise"
+
+
+def test_le_panneau_est_chaud_et_texture():
+    """Un panneau doit etre chaud, degrade et hachure - pas un aplat."""
+    from soulhalo.dxui import MenuFrame, new_screen
+    buf = new_screen(60, 40)
+    MenuFrame().panel(buf, 4, 4, 52, 32)
+    z = buf[6:34, 6:54]
+    assert z[..., 0].mean() > z[..., 2].mean() + 0.2      # chaud
+    assert z[:4].mean() > z[-4:].mean()                   # eclaire en haut
+    assert z.std() > 0.01                                 # texture
+
+
+def test_les_coins_sont_arrondis():
+    """DX n'a aucun angle droit."""
+    from soulhalo.dxui import MenuFrame, new_screen
+    buf = new_screen(60, 40)
+    MenuFrame().panel(buf, 4, 4, 52, 32, radius=4)
+    assert buf[4, 4].sum() == 0.0            # coin laisse vide
+    assert buf[20, 4].sum() > 0.0            # milieu du bord rempli
+
+
+def test_la_plaque_de_titre_deborde_vers_le_haut():
+    """Dans DX le titre est une PLAQUE posee sur le bord, pas un trait
+    trace a l'interieur du cadre."""
+    from soulhalo.dxui import MenuFrame, new_screen
+    buf = new_screen(120, 60)
+    y = 20
+    MenuFrame().draw(buf, 10, y, 100, 34, title="Nature")
+    au_dessus = buf[y - 4:y - 1, 40:80]
+    assert au_dessus.sum() > 0.0             # la plaque deborde
+
+
+def test_le_texte_peut_etre_cerne():
+    """Sans contour, du texte clair sur parchemin clair est illisible."""
+    from soulhalo.dxui import draw_text, new_screen
+    a = new_screen(60, 16)
+    b = new_screen(60, 16)
+    draw_text(a, "ABC", 4, 4, (1, 1, 1))
+    draw_text(b, "ABC", 4, 4, (1, 1, 1), outline=(0.2, 0.1, 0.05))
+    assert b.sum() > a.sum()                 # le contour ajoute des pixels
+
+
+def test_la_ligne_active_reste_lisible_a_tout_moment():
+    """Piege : un clignotement trop profond faisait retomber la plaque
+    doree au niveau du parchemin, rendant le curseur invisible."""
+    from soulhalo.dxui import ChoiceList, MenuFrame, new_screen
+    cl = ChoiceList(MenuFrame())
+    for tick in range(0, 30, 3):
+        buf = new_screen(120, 60)
+        cl.draw(buf, 6, 6, 108, ["UN", "DEUX", "TROIS"], index=1, tick=tick)
+        active = buf[6 + 2 + 14:6 + 2 + 26, 12:110]
+        autre = buf[6 + 2 + 28:6 + 2 + 40, 12:110]
+        assert active.mean() > autre.mean() * 1.25, f"tick={tick}"

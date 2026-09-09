@@ -102,10 +102,18 @@ def test_nature_inconnue_refusee(r):
 
 # --- UI DX ------------------------------------------------------------------
 def test_le_bandeau_dx_apparait_a_la_fin(r):
-    """Le bandeau ne doit pas etre la pendant la ruee : il se pose apres."""
-    bas_debut = r.burst(0.2)[-40:]
-    bas_fin = r.burst(1.0)[-40:]
-    assert bas_fin.std() > bas_debut.std()
+    """Le bandeau ne doit pas etre la pendant la ruee : il se pose apres.
+
+    On compare la TEINTE, pas l'ecart-type : le parchemin de DX est chaud
+    (R nettement > B) alors que le VFX en pleine ruee est froid. Un
+    ecart-type mesurait surtout l'agitation du fond, qui domine pendant
+    l'effet - le test passait pour la mauvaise raison.
+    """
+    def chaleur(f):
+        z = f[-40:]
+        return float(z[..., 0].mean() - z[..., 2].mean())
+    assert chaleur(r.burst(1.0)) > chaleur(r.burst(0.2))
+    assert chaleur(r.burst(1.0)) > 0.0          # le parchemin est chaud
 
 
 def test_sans_bandeau_l_ecran_reste_propre():

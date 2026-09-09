@@ -70,57 +70,149 @@ def _blend(dst, src, alpha, x, y):
     dst[y1:y2, x1:x2] = dst[y1:y2, x1:x2] * (1.0 - a) + s * a
 
 
+def _round_mask(h, w, r):
+    """Masque plein à coins arrondis. DX n'a aucun angle droit."""
+    m = np.ones((h, w), np.float32)
+    r = int(min(r, h // 2, w // 2))
+    if r <= 0:
+        return m
+    yy, xx = np.indices((r, r))
+    c = (np.hypot(r - 1 - yy, r - 1 - xx) <= r - 0.35).astype(np.float32)
+    m[:r, :r] = c
+    m[:r, w - r:] = c[:, ::-1]
+    m[h - r:, :r] = c[::-1, :]
+    m[h - r:, w - r:] = c[::-1, ::-1]
+    return m
+
+
+def _erode(m):
+    """Érosion 4-voisins : sert à extraire les liserés du masque."""
+    e = m.copy()
+    e[1:] = np.minimum(e[1:], m[:-1])
+    e[:-1] = np.minimum(e[:-1], m[1:])
+    e[:, 1:] = np.minimum(e[:, 1:], m[:, :-1])
+    e[:, :-1] = np.minimum(e[:, :-1], m[:, 1:])
+    return e
+
+
 @dataclass(frozen=True)
 class MenuStyle:
-    """Palette du cadre, dans l'esprit des menus PMD (bleu nuit + liseré)."""
-    fill: tuple = (0.07, 0.10, 0.28)
-    fill_alpha: float = 0.86
-    border_out: tuple = (0.98, 0.98, 1.00)
-    border_in: tuple = (0.38, 0.52, 0.92)
-    title: tuple = (1.00, 0.94, 0.62)
-    text: tuple = (0.96, 0.97, 1.00)
-    cursor: tuple = (1.00, 0.86, 0.30)
-    dim: tuple = (0.62, 0.66, 0.78)
+    """Palette RELEVEE sur des captures de Rescue Team DX.
+
+    Les valeurs sont des medianes mesurees sur le panneau « Overview »,
+    pas des couleurs choisies a l'oeil : le parchemin de DX est CHAUD
+    (0.58, 0.45, 0.23) et son second panneau turquoise (0.40, 0.55, 0.58).
+    La palette bleu nuit precedente etait celle d'Explorers of Sky - donc
+    du PMD classique, pas du DX.
+    """
+    # parchemin
+    fill: tuple = (0.584, 0.449, 0.227)
+    fill_hi: tuple = (0.714, 0.588, 0.361)
+    fill_lo: tuple = (0.443, 0.318, 0.153)
+    fill_alpha: float = 0.97
+    # bois du cadre
+    border_out: tuple = (0.235, 0.129, 0.055)     # trait exterieur sombre
+    border_in: tuple = (0.804, 0.671, 0.443)      # bevel clair interieur
+    wood: tuple = (0.604, 0.435, 0.286)
+    # bandeau sombre des libelles
+    band: tuple = (0.486, 0.298, 0.149)
+    # panneau secondaire turquoise
+    teal: tuple = (0.396, 0.545, 0.584)
+    teal_lo: tuple = (0.259, 0.388, 0.427)
+    # textes
+    title: tuple = (1.000, 0.984, 0.945)
+    text: tuple = (0.204, 0.110, 0.047)
+    text_on_band: tuple = (0.969, 0.929, 0.847)
+    cursor: tuple = (1.000, 0.843, 0.322)
+    dim: tuple = (0.435, 0.318, 0.176)
+    # texture
+    hatch: float = 0.06
+    radius: int = 3
 
 
 class MenuFrame:
-    """Cadre de menu DX : fond translucide, double liseré, séparateur.
+    """Panneau DX transpose en pixel art, sur la grille du moteur.
 
-    La bordure fait 1 px logique, comme dans le moteur : à l'échelle 3x ou
-    4x elle reste nette parce que l'agrandissement est entier.
+    DX peint ses panneaux en haute resolution ; PMDO travaille en 320x240.
+    On garde donc la GRILLE du moteur et on transpose la direction
+    artistique : parchemin chaud degrade, hachures diagonales, liseré bois
+    sombre double d'un bevel clair, coins arrondis.
+
+    Difference structurelle avec la version precedente : dans DX le titre
+    n'est PAS un separateur trace a l'interieur du cadre, c'est une PLAQUE
+    bombee posee par-dessus le bord haut, qui deborde vers le haut.
     """
 
     def __init__(self, style: MenuStyle | None = None):
         self.s = style or MenuStyle()
 
-    def draw(self, buf, x, y, w, h, title=None, divider=True):
+    # -- corps -------------------------------------------------------------
+    def panel(self, buf, x, y, w, h, color=None, lo=None, radius=None,
+              alpha=None, hatch=True):
+        """Pose un panneau : degrade, hachures, bevel clair, contour sombre."""
         s = self.s
         H, W = buf.shape[:2]
-        x, y = int(x), int(y)
-        w, h = int(w), int(h)
-        x2, y2 = min(W, x + w), min(H, y + h)
-        if x2 <= x or y2 <= y:
+        x, y, w, h = int(x), int(y), int(w), int(h)
+        if w <= 2 or h <= 2:
             return
-        # fond
-        reg = buf[y:y2, x:x2]
-        buf[y:y2, x:x2] = reg * (1 - s.fill_alpha) + \
-            np.array(s.fill, np.float32) * s.fill_alpha
-        # liseré externe puis interne
-        for k, col in ((0, s.border_out), (1, s.border_in)):
-            c = np.array(col, np.float32)
-            if y + k < y2:
-                buf[y + k, x + k:x2 - k] = c
-            if y2 - 1 - k > y:
-                buf[y2 - 1 - k, x + k:x2 - k] = c
-            if x + k < x2:
-                buf[y + k:y2 - k, x + k] = c
-            if x2 - 1 - k > x:
-                buf[y + k:y2 - k, x2 - 1 - k] = c
-        # séparateur sous le titre, à LINE_HEIGHT comme TitledStripMenu
-        if title is not None and divider:
-            yy = y + 2 + LINE_HEIGHT
-            if y < yy < y2 - 1:
-                buf[yy, x + 3:x2 - 3] = np.array(s.border_in, np.float32)
+        r = s.radius if radius is None else int(radius)
+        a = s.fill_alpha if alpha is None else float(alpha)
+        top = np.array(s.fill_hi if color is None else color, np.float32)
+        bot = np.array(s.fill_lo if lo is None else lo, np.float32)
+
+        m = _round_mask(h, w, r)
+        # degrade vertical : DX eclaire ses panneaux par le haut
+        g = np.linspace(0.0, 1.0, h, dtype=np.float32)[:, None, None]
+        col = top[None, None, :] * (1.0 - g) + bot[None, None, :] * g
+        col = np.repeat(col, w, axis=1)
+
+        if hatch and s.hatch > 0:
+            yy, xx = np.indices((h, w))
+            # hachures diagonales, plus marquees vers le bas-droite
+            ramp = ((yy / max(1, h - 1)) * 0.6 + (xx / max(1, w - 1)) * 0.4)
+            lines = (((xx + yy) % 4) == 0).astype(np.float32)
+            col = col * (1.0 - s.hatch * lines * ramp)[..., None]
+
+        inner = _erode(m)
+        bevel = np.clip(m - inner, 0.0, 1.0)          # 1 px de contour
+        core = _erode(inner)
+        light = np.clip(inner - core, 0.0, 1.0)       # 1 px juste dedans
+        col = col * (1.0 - bevel[..., None]) + \
+            np.array(s.border_out, np.float32) * bevel[..., None]
+        col = col * (1.0 - light[..., None] * 0.55) + \
+            np.array(s.border_in, np.float32) * (light[..., None] * 0.55)
+
+        # decoupe a l'ecran
+        x1, y1 = max(0, x), max(0, y)
+        x2, y2 = min(W, x + w), min(H, y + h)
+        if x2 <= x1 or y2 <= y1:
+            return
+        sub = col[y1 - y:y2 - y, x1 - x:x2 - x]
+        sa = (m[y1 - y:y2 - y, x1 - x:x2 - x] * a)[..., None]
+        buf[y1:y2, x1:x2] = buf[y1:y2, x1:x2] * (1.0 - sa) + sub * sa
+
+    # -- plaque de titre ---------------------------------------------------
+    def title_plate(self, buf, x, y, w, text):
+        """Plaque bombee posee SUR le bord haut, comme dans DX."""
+        s = self.s
+        tw = text_width(text)
+        pw = int(min(max(tw + 18, 52), max(20, w - 6)))
+        px = int(x + (w - pw) // 2)
+        ph = 13
+        py = int(y - 5)
+        self.panel(buf, px, py, pw, ph, color=s.wood,
+                   lo=(0.404, 0.259, 0.137), radius=4, hatch=False)
+        draw_text(buf, text, px + (pw - tw) // 2, py + 3, s.title,
+                  outline=s.border_out)
+        return py + ph
+
+    def draw(self, buf, x, y, w, h, title=None, divider=True, color=None,
+             lo=None, radius=None, alpha=None):
+        """Panneau complet. `divider` n'a plus d'objet : DX pose une plaque."""
+        self.panel(buf, x, y, w, h, color=color, lo=lo, radius=radius,
+                   alpha=alpha)
+        if title is not None:
+            self.title_plate(buf, x, y, w, str(title).upper())
 
 
 # --------------------------------------------------------------------------
@@ -219,7 +311,10 @@ class PokemonCard:
              tint=None):
         p = self.p
         s = self.frame.s
-        self.frame.draw(buf, x, y, p.w, p.h, title=None, divider=False)
+        # la carte selectionnee passe sur bois clair, comme un onglet actif
+        self.frame.draw(buf, x, y, p.w, p.h,
+                        color=s.wood if selected else None,
+                        lo=s.fill_lo if selected else None)
 
         # portrait, encadré : SpriteCollab le livre sur fond opaque, donc on
         # l'assume comme une vignette, exactement comme DX.
@@ -229,8 +324,8 @@ class PokemonCard:
             px = x + (p.w - por.width) // 2
             py = y + p.gap + 1
             _blend(buf, a[..., :3], a[..., 3:], px, py)
-            # liseré du portrait
-            c = np.array(s.border_in if not selected else s.cursor, np.float32)
+            # liseré du portrait : bois sombre, dore si selectionne
+            c = np.array(s.cursor if selected else s.border_out, np.float32)
             H, W = buf.shape[:2]
             if 0 <= py - 1 < H:
                 buf[py - 1, max(0, px - 1):min(W, px + por.width + 1)] = c
@@ -291,29 +386,42 @@ class ChoiceList:
         h = self.height(len(shown), title is not None)
         self.frame.draw(buf, x, y, w, h, title=title)
         s = self.frame.s
-        if title:
-            draw_text(buf, title, x + 4, y + 3, s.title)
         y0 = y + 2 + (TITLE_OFFSET if title else 2)
+        H, W = buf.shape[:2]
         for i, it in enumerate(shown):
             yy = y0 + i * VERT_SPACE
-            if top + i == index:
-                # curseur clignotant, période ENTIÈRE : pas de dérive
-                blink = 0.65 + 0.35 * float(np.cos(TAU * (tick % 30) / 30.0))
-                H, W = buf.shape[:2]
+            sel = (top + i == index)
+            if sel:
+                # bandeau de curseur : dans DX la ligne active est posee sur
+                # une plaque, pas seulement coloree. Periode ENTIERE (30
+                # ticks) pour que le clignotement ne derive pas.
+                # Le plancher reste haut (0.88) : a 0.72 la plaque doree
+                # tombait au niveau du parchemin a mi-clignotement et la
+                # ligne active devenait indistinguable des autres.
+                blink = 0.94 + 0.06 * float(np.cos(TAU * (tick % 30) / 30.0))
+                self.frame.panel(buf, x + 3, yy - 2, w - 6, LINE_HEIGHT,
+                                 color=tuple(c * blink for c in s.cursor),
+                                 lo=tuple(c * blink * 0.72 for c in s.cursor),
+                                 radius=2, hatch=False)
+            else:
+                # les lignes inactives reposent sur le bandeau sombre
                 x1, x2 = max(0, x + 3), min(W, x + w - 3)
-                y1, y2 = max(0, yy - 1), min(H, yy + LINE_HEIGHT - 1)
+                y1, y2 = max(0, yy - 2), min(H, yy + LINE_HEIGHT - 2)
                 if x2 > x1 and y2 > y1:
-                    c = np.array(s.cursor, np.float32) * blink
-                    buf[y1:y2, x1:x2] = buf[y1:y2, x1:x2] * 0.45 + c * 0.55
+                    b = np.array(s.band, np.float32)
+                    buf[y1:y2, x1:x2] = buf[y1:y2, x1:x2] * 0.62 + b * 0.38
             lbl = str(it).replace("_", " ")
-            draw_text(buf, lbl, x + 6, yy + 1,
-                      s.fill if top + i == index else s.text)
+            draw_text(buf, lbl, x + 7, yy + 1,
+                      s.text if sel else s.text_on_band,
+                      outline=None if sel else s.border_out)
         # chevrons : signaler qu'il reste des entrées hors du cadre
         if max_rows and n > max_rows:
             if top > 0:
-                draw_text(buf, "-", x + w - 10, y + 3, s.dim)
+                draw_text(buf, "-", x + w - 11, y + 3, s.title,
+                          outline=s.border_out)
             if top + max_rows < n:
-                draw_text(buf, "-", x + w - 10, y + h - 9, s.dim)
+                draw_text(buf, "-", x + w - 11, y + h - 10, s.title,
+                          outline=s.border_out)
         return h
 
 
@@ -438,31 +546,51 @@ _GLYPHS = {
 GLYPH_W, GLYPH_H = 5, 7
 
 
-def draw_text(buf, text, x, y, color=(1.0, 1.0, 1.0), spacing=1):
+def draw_text(buf, text, x, y, color=(1.0, 1.0, 1.0), spacing=1,
+              outline=None):
     """Ecrit du texte en police bitmap 5x7.
 
     Les menus PMDO reposent sur une fonte pixel : une fonte vectorielle
     agrandie casserait l'alignement sur la grille logique.
+
+    `outline` cerne les glyphes d'un liseré 1 px. DX cerne tous ses textes
+    de sombre : sans ce contour, du texte clair sur parchemin clair devient
+    illisible.
     """
     H, W = buf.shape[:2]
     col = np.asarray(color, np.float32)
-    cx = int(x)
+    x, y = int(x), int(y)
+
+    # on collecte d'abord les pixels, pour poser le contour dessous
+    pix = []
+    cx = x
     for ch in str(text).upper():
         g = _GLYPHS.get(ch)
-        if g is None:
-            cx += GLYPH_W + spacing
-            continue
-        for ry, row in enumerate(g):
-            yy = int(y) + ry
-            if not (0 <= yy < H):
-                continue
-            for rx, bit in enumerate(row):
-                if bit == "1":
-                    xx = cx + rx
-                    if 0 <= xx < W:
-                        buf[yy, xx] = col
+        if g is not None:
+            for ry, row in enumerate(g):
+                for rx, bit in enumerate(row):
+                    if bit == "1":
+                        pix.append((cx + rx, y + ry))
         cx += GLYPH_W + spacing
-    return cx - int(x)
+
+    if outline is not None and pix:
+        oc = np.asarray(outline, np.float32)
+        on = set()
+        full = set(pix)
+        for px, py in pix:
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    p = (px + dx, py + dy)
+                    if p not in full:
+                        on.add(p)
+        for px, py in on:
+            if 0 <= px < W and 0 <= py < H:
+                buf[py, px] = oc
+
+    for px, py in pix:
+        if 0 <= px < W and 0 <= py < H:
+            buf[py, px] = col
+    return cx - x
 
 
 def text_width(text, spacing=1):

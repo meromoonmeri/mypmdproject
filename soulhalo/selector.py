@@ -151,11 +151,17 @@ class SelectorScreen:
 
         mon = self.roster[sel]
         s = self.frame.s
-        # nom + type
-        draw_text(buf, mon["nom"], 6, 124, s.title)
-        tcol = self.types[mon["type"]]["rgb"]
-        draw_text(buf, self.types[mon["type"]]["fr"], self.w - 6 -
-                  text_width(self.types[mon["type"]]["fr"]), 124, tcol)
+        # bandeau nom + type : dans DX aucun texte ne flotte sur le decor,
+        # il repose toujours sur un panneau. Le type prend le panneau
+        # turquoise, comme la fiche de talent du jeu.
+        self.frame.panel(buf, 4, 120, self.w - 8, 15, radius=3)
+        draw_text(buf, mon["nom"], 9, 125, s.text, outline=s.border_in)
+        tfr = self.types[mon["type"]]["fr"]
+        tw = text_width(tfr)
+        self.frame.panel(buf, self.w - 13 - tw, 122, tw + 9, 11,
+                         color=s.teal, lo=s.teal_lo, radius=2, hatch=False)
+        draw_text(buf, tfr, self.w - 9 - tw, 125, s.title,
+                  outline=s.border_out)
         # talent et nature
         self.list.draw(buf, 6, 136, 148, mon["talents"],
                        index=min(self.talent_idx, len(mon["talents"]) - 1),
