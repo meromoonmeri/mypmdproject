@@ -1,0 +1,12 @@
+{
+  "moteur": "parametres PMDO reels (RogueCollab/RogueEssence) : VERT_SPACE=14, LINE_HEIGHT=12, TITLE_OFFSET=16, PortraitSize=40",
+  "ecran_logique": "320x240 puis agrandissement ENTIER au plus proche voisin",
+  "roster": 42,
+  "frames": 48,
+  "fps": 20,
+  "molette": "WheelState, inertie, friction 0.82, pos continu",
+  "paillettes": "uniquement en mouvement, graine fixe",
+  "separation": "step() avance l'etat, render() est pur",
+  "vignette": "portrait 40x40 encadre AU-DESSUS, sprite anime en dessous",
+  "sprites": "SpriteCollab, durees d'AnimData.xml"
+}

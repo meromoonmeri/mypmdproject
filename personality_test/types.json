@@ -1,37 +1,611 @@
 {
-  "note": "Couleur d'aura par type. Sert au halo qui se degage du sprite choisi.",
+  "note": "Couleur d'aura par type. Roster = 42 starters Halcyon, sprites SpriteCollab.",
   "types": {
-    "grass":    {"fr": "Plante",   "rgb": [0.42, 0.85, 0.36]},
-    "fire":     {"fr": "Feu",      "rgb": [0.98, 0.45, 0.14]},
-    "water":    {"fr": "Eau",      "rgb": [0.30, 0.62, 0.98]},
-    "electric": {"fr": "Electrik", "rgb": [1.00, 0.85, 0.20]},
-    "normal":   {"fr": "Normal",   "rgb": [0.85, 0.83, 0.72]},
-    "fighting": {"fr": "Combat",   "rgb": [0.86, 0.34, 0.28]},
-    "psychic":  {"fr": "Psy",      "rgb": [0.98, 0.42, 0.68]},
-    "dark":     {"fr": "Tenebres", "rgb": [0.40, 0.32, 0.40]},
-    "steel":    {"fr": "Acier",    "rgb": [0.72, 0.76, 0.84]},
-    "fairy":    {"fr": "Fee",      "rgb": [0.98, 0.68, 0.88]},
-    "ice":      {"fr": "Glace",    "rgb": [0.62, 0.92, 0.96]},
-    "ground":   {"fr": "Sol",      "rgb": [0.86, 0.72, 0.42]},
-    "rock":     {"fr": "Roche",    "rgb": [0.76, 0.68, 0.42]},
-    "flying":   {"fr": "Vol",      "rgb": [0.66, 0.74, 0.96]},
-    "bug":      {"fr": "Insecte",  "rgb": [0.66, 0.80, 0.28]},
-    "poison":   {"fr": "Poison",   "rgb": [0.72, 0.44, 0.82]},
-    "ghost":    {"fr": "Spectre",  "rgb": [0.52, 0.44, 0.76]},
-    "dragon":   {"fr": "Dragon",   "rgb": [0.44, 0.42, 0.94]}
+    "grass": {
+      "fr": "Plante",
+      "rgb": [
+        0.42,
+        0.85,
+        0.36
+      ]
+    },
+    "fire": {
+      "fr": "Feu",
+      "rgb": [
+        0.98,
+        0.45,
+        0.14
+      ]
+    },
+    "water": {
+      "fr": "Eau",
+      "rgb": [
+        0.3,
+        0.62,
+        0.98
+      ]
+    },
+    "electric": {
+      "fr": "Electrik",
+      "rgb": [
+        1.0,
+        0.85,
+        0.2
+      ]
+    },
+    "normal": {
+      "fr": "Normal",
+      "rgb": [
+        0.85,
+        0.83,
+        0.72
+      ]
+    },
+    "fighting": {
+      "fr": "Combat",
+      "rgb": [
+        0.86,
+        0.34,
+        0.28
+      ]
+    },
+    "psychic": {
+      "fr": "Psy",
+      "rgb": [
+        0.98,
+        0.42,
+        0.68
+      ]
+    },
+    "dark": {
+      "fr": "Tenebres",
+      "rgb": [
+        0.4,
+        0.32,
+        0.4
+      ]
+    },
+    "steel": {
+      "fr": "Acier",
+      "rgb": [
+        0.72,
+        0.76,
+        0.84
+      ]
+    },
+    "fairy": {
+      "fr": "Fee",
+      "rgb": [
+        0.98,
+        0.68,
+        0.88
+      ]
+    },
+    "ice": {
+      "fr": "Glace",
+      "rgb": [
+        0.62,
+        0.92,
+        0.96
+      ]
+    },
+    "ground": {
+      "fr": "Sol",
+      "rgb": [
+        0.86,
+        0.72,
+        0.42
+      ]
+    },
+    "rock": {
+      "fr": "Roche",
+      "rgb": [
+        0.76,
+        0.68,
+        0.42
+      ]
+    },
+    "flying": {
+      "fr": "Vol",
+      "rgb": [
+        0.66,
+        0.74,
+        0.96
+      ]
+    },
+    "bug": {
+      "fr": "Insecte",
+      "rgb": [
+        0.66,
+        0.8,
+        0.28
+      ]
+    },
+    "poison": {
+      "fr": "Poison",
+      "rgb": [
+        0.72,
+        0.44,
+        0.82
+      ]
+    },
+    "ghost": {
+      "fr": "Spectre",
+      "rgb": [
+        0.52,
+        0.44,
+        0.76
+      ]
+    },
+    "dragon": {
+      "fr": "Dragon",
+      "rgb": [
+        0.44,
+        0.42,
+        0.94
+      ]
+    }
   },
   "roster": [
-    {"dex": "0001", "nom": "Bulbizarre", "type": "grass"},
-    {"dex": "0004", "nom": "Salameche",  "type": "fire"},
-    {"dex": "0007", "nom": "Carapuce",   "type": "water"},
-    {"dex": "0025", "nom": "Pikachu",    "type": "electric"},
-    {"dex": "0133", "nom": "Evoli",      "type": "normal"},
-    {"dex": "0152", "nom": "Germignon",  "type": "grass"},
-    {"dex": "0155", "nom": "Hericendre", "type": "fire"},
-    {"dex": "0158", "nom": "Kaiminus",   "type": "water"},
-    {"dex": "0252", "nom": "Arcko",      "type": "grass"},
-    {"dex": "0255", "nom": "Poussifeu",  "type": "fire"},
-    {"dex": "0258", "nom": "Gobou",      "type": "water"},
-    {"dex": "0447", "nom": "Riolu",      "type": "fighting"}
+    {
+      "dex": "0004",
+      "slug": "charmander",
+      "nom": "Salameche",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "solar_power"
+      ],
+      "egg_move": "metal_claw"
+    },
+    {
+      "dex": "0007",
+      "slug": "squirtle",
+      "nom": "Carapuce",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "rain_dish"
+      ],
+      "egg_move": "icy_wind"
+    },
+    {
+      "dex": "0025",
+      "slug": "pikachu",
+      "nom": "Pikachu",
+      "type": "electric",
+      "talents": [
+        "static",
+        "lightning_rod"
+      ],
+      "egg_move": "disarming_voice"
+    },
+    {
+      "dex": "0037",
+      "slug": "vulpix",
+      "nom": "Goupix",
+      "type": "fire",
+      "talents": [
+        "flash_fire",
+        "drought"
+      ],
+      "egg_move": "tail_slap"
+    },
+    {
+      "dex": "0037-1",
+      "slug": "vulpix-1",
+      "nom": "Goupix d'Alola",
+      "type": "ice",
+      "talents": [
+        "snow_cloak",
+        "snow_warning"
+      ],
+      "egg_move": "tail_slap"
+    },
+    {
+      "dex": "0052",
+      "slug": "meowth",
+      "nom": "Miaouss",
+      "type": "normal",
+      "talents": [
+        "pickup",
+        "technician"
+      ],
+      "egg_move": "foul_play"
+    },
+    {
+      "dex": "0052-1",
+      "slug": "meowth-1",
+      "nom": "Miaouss d'Alola",
+      "type": "dark",
+      "talents": [
+        "pickup",
+        "tough_claws"
+      ],
+      "egg_move": "foul_play"
+    },
+    {
+      "dex": "0066",
+      "slug": "machop",
+      "nom": "Machoc",
+      "type": "fighting",
+      "talents": [
+        "guts",
+        "no_guard"
+      ],
+      "egg_move": "bullet_punch"
+    },
+    {
+      "dex": "0104",
+      "slug": "cubone",
+      "nom": "Osselait",
+      "type": "ground",
+      "talents": [
+        "rock_head",
+        "lightning_rod"
+      ],
+      "egg_move": "double_kick"
+    },
+    {
+      "dex": "0133",
+      "slug": "eevee",
+      "nom": "Evoli",
+      "type": "normal",
+      "talents": [
+        "run_away",
+        "adaptability"
+      ],
+      "egg_move": "double_kick"
+    },
+    {
+      "dex": "0152",
+      "slug": "chikorita",
+      "nom": "Germignon",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "leaf_guard"
+      ],
+      "egg_move": "refresh"
+    },
+    {
+      "dex": "0155",
+      "slug": "cyndaquil",
+      "nom": "Hericendre",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "flash_fire"
+      ],
+      "egg_move": "double_kick"
+    },
+    {
+      "dex": "0158",
+      "slug": "totodile",
+      "nom": "Kaiminus",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "sheer_force"
+      ],
+      "egg_move": "aqua_jet"
+    },
+    {
+      "dex": "0231",
+      "slug": "phanpy",
+      "nom": "Phanpy",
+      "type": "ground",
+      "talents": [
+        "pickup",
+        "sand_veil"
+      ],
+      "egg_move": "ice_shard"
+    },
+    {
+      "dex": "0252",
+      "slug": "treecko",
+      "nom": "Arcko",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "unburden"
+      ],
+      "egg_move": "dragon_breath"
+    },
+    {
+      "dex": "0255",
+      "slug": "torchic",
+      "nom": "Poussifeu",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "speed_boost"
+      ],
+      "egg_move": "low_kick"
+    },
+    {
+      "dex": "0258",
+      "slug": "mudkip",
+      "nom": "Gobou",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "damp"
+      ],
+      "egg_move": "avalanche"
+    },
+    {
+      "dex": "0300",
+      "slug": "skitty",
+      "nom": "Skitty",
+      "type": "normal",
+      "talents": [
+        "cute_charm",
+        "wonder_skin"
+      ],
+      "egg_move": "zen_headbutt"
+    },
+    {
+      "dex": "0387",
+      "slug": "turtwig",
+      "nom": "Tortipouss",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "shell_armor"
+      ],
+      "egg_move": "sand_tomb"
+    },
+    {
+      "dex": "0390",
+      "slug": "chimchar",
+      "nom": "Ouisticram",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "iron_fist"
+      ],
+      "egg_move": "thunder_punch"
+    },
+    {
+      "dex": "0393",
+      "slug": "piplup",
+      "nom": "Tiplouf",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "defiant"
+      ],
+      "egg_move": "icy_wind"
+    },
+    {
+      "dex": "0403",
+      "slug": "shinx",
+      "nom": "Lixy",
+      "type": "electric",
+      "talents": [
+        "rivalry",
+        "guts"
+      ],
+      "egg_move": "ice_fang"
+    },
+    {
+      "dex": "0446",
+      "slug": "munchlax",
+      "nom": "Goinfrex",
+      "type": "normal",
+      "talents": [
+        "pickup",
+        "thick_fat"
+      ],
+      "egg_move": "zen_headbutt"
+    },
+    {
+      "dex": "0447",
+      "slug": "riolu",
+      "nom": "Riolu",
+      "type": "fighting",
+      "talents": [
+        "steadfast",
+        "inner_focus"
+      ],
+      "egg_move": "bullet_punch"
+    },
+    {
+      "dex": "0495",
+      "slug": "snivy",
+      "nom": "Vipelierre",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "contrary"
+      ],
+      "egg_move": "twister"
+    },
+    {
+      "dex": "0498",
+      "slug": "tepig",
+      "nom": "Gruikui",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "thick_fat"
+      ],
+      "egg_move": "sucker_punch"
+    },
+    {
+      "dex": "0501",
+      "slug": "oshawott",
+      "nom": "Moustillon",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "shell_armor"
+      ],
+      "egg_move": "assurance"
+    },
+    {
+      "dex": "0570",
+      "slug": "zorua",
+      "nom": "Zorua",
+      "type": "dark",
+      "talents": [
+        "illusion"
+      ],
+      "egg_move": "copycat"
+    },
+    {
+      "dex": "0570-1",
+      "slug": "zorua-1",
+      "nom": "Zorua de Hisui",
+      "type": "ghost",
+      "talents": [
+        "illusion"
+      ],
+      "egg_move": "copycat"
+    },
+    {
+      "dex": "0650",
+      "slug": "chespin",
+      "nom": "Marisson",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "bulletproof"
+      ],
+      "egg_move": "power_up_punch"
+    },
+    {
+      "dex": "0653",
+      "slug": "fennekin",
+      "nom": "Feunnec",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "magician"
+      ],
+      "egg_move": "wish"
+    },
+    {
+      "dex": "0656",
+      "slug": "froakie",
+      "nom": "Grenousse",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "protean"
+      ],
+      "egg_move": "mud_sport"
+    },
+    {
+      "dex": "0672",
+      "slug": "skiddo",
+      "nom": "Cabriolaine",
+      "type": "grass",
+      "talents": [
+        "sap_sipper",
+        "grass_pelt"
+      ],
+      "egg_move": "zen_headbutt"
+    },
+    {
+      "dex": "0677",
+      "slug": "espurr",
+      "nom": "Psystigri",
+      "type": "psychic",
+      "talents": [
+        "keen_eye",
+        "infiltrator"
+      ],
+      "egg_move": "assist"
+    },
+    {
+      "dex": "0722",
+      "slug": "rowlet",
+      "nom": "Brindibou",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "long_reach"
+      ],
+      "egg_move": "confuse_ray"
+    },
+    {
+      "dex": "0725",
+      "slug": "litten",
+      "nom": "Flamiaou",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "intimidate"
+      ],
+      "egg_move": "revenge"
+    },
+    {
+      "dex": "0728",
+      "slug": "popplio",
+      "nom": "Otaquin",
+      "type": "water",
+      "talents": [
+        "torrent",
+        "liquid_voice"
+      ],
+      "egg_move": "charm"
+    },
+    {
+      "dex": "0744",
+      "slug": "rockruff",
+      "nom": "Rocabot",
+      "type": "rock",
+      "talents": [
+        "keen_eye",
+        "vital_spirit"
+      ],
+      "egg_move": "thunder_fang"
+    },
+    {
+      "dex": "0813",
+      "slug": "scorbunny",
+      "nom": "Flambino",
+      "type": "fire",
+      "talents": [
+        "blaze",
+        "libero"
+      ],
+      "egg_move": "assurance"
+    },
+    {
+      "dex": "0835",
+      "slug": "yamper",
+      "nom": "Voltoutou",
+      "type": "electric",
+      "talents": [
+        "ball_fetch",
+        "rattled"
+      ],
+      "egg_move": "flame_charge"
+    },
+    {
+      "dex": "0906",
+      "slug": "sprigatito",
+      "nom": "Poussacha",
+      "type": "grass",
+      "talents": [
+        "overgrow",
+        "protean"
+      ],
+      "egg_move": "copycat"
+    },
+    {
+      "dex": "0935",
+      "slug": "charcadet",
+      "nom": "Charbambin",
+      "type": "fire",
+      "talents": [
+        "flash_fire",
+        "flame_body"
+      ],
+      "egg_move": "destiny_bond"
+    }
   ]
 }
