@@ -71,6 +71,18 @@ def orbit_puffs(cx: float, cy: float, rx: float, ry: float, count: int,
     return puffs
 
 
+def _lobe_radius(seed: int, k: int, lo: float, hi: float) -> float:
+    """
+    Rayon d'un lobe, **déterministe** pour un (puff, lobe) donné.
+
+    Point clé pour la fluidité : si le rayon était tiré au hasard à chaque
+    frame, chaque touffe grésillerait. Ici il ne dépend que de l'identité du
+    lobe, donc la touffe garde sa forme et se contente de tourner/onduler.
+    """
+    h = math.sin(seed * 12.9898 + k * 78.233) * 43758.5453
+    return lo + (hi - lo) * (h - math.floor(h))
+
+
 def _puff_mask(shape: Tuple[int, int], puff: Puff, wobble: float,
                rng: np.random.Generator) -> np.ndarray:
     """
@@ -91,8 +103,11 @@ def _puff_mask(shape: Tuple[int, int], puff: Puff, wobble: float,
         dist = r * (0.62 + 0.10 * math.cos(a_j * 2 + wobble))
         lx = puff.x - math.cos(a_j) * dist * 1.05
         ly = puff.y - math.sin(a_j) * dist * 0.78
-        lr = r * float(rng.uniform(0.42, 0.56))
-        P.disc_mask(mask, lx, ly, lr)
+        # rayon stable dans le temps + respiration continue : la touffe
+        # bourgeonne doucement au lieu de scintiller d'une frame à l'autre.
+        base = _lobe_radius(puff.seed, k, 0.42, 0.56)
+        breath = 1.0 + 0.10 * math.sin(wobble * 2.0 + k * 1.7 + puff.seed * 0.05)
+        P.disc_mask(mask, lx, ly, r * base * breath)
 
     # base franche : on coupe net sous la ligne de flottaison
     cut = int(round(puff.y + r * 0.72))
@@ -104,7 +119,8 @@ def _puff_mask(shape: Tuple[int, int], puff: Puff, wobble: float,
 def render_cloud_layer(w: int, h: int, cx: float, cy: float, phase: float,
                        count: int = 3, rx: float = 9.0, ry: float = 5.0,
                        base_scale: float = 4.0, bolts: bool = True,
-                       seed: int = 0, bob: float = 1.0
+                       seed: int = 0, bob: float = 1.0,
+                       bolt_cycles: float = 2.0
                        ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Rend la couronne de nuages pour une frame donnée.
@@ -113,6 +129,10 @@ def render_cloud_layer(w: int, h: int, cx: float, cy: float, phase: float,
     `arrière` SOUS le Pokémon et `avant` PAR-DESSUS, afin que les nuages
     passent réellement derrière puis devant la tête pendant la rotation.
     """
+    # Repliement de la phase : un tour complet ramène exactement à l'état
+    # initial, donc la dernière frame se raccorde à la première au pixel près.
+    phase = phase % 1.0
+
     rng = np.random.default_rng(seed * 7919 + int(phase * 10000))
     back = P.new_idx(w, h)
     front = P.new_idx(w, h)
@@ -131,25 +151,40 @@ def render_cloud_layer(w: int, h: int, cx: float, cy: float, phase: float,
         P.blit_idx(target, shaded, 0, 0)
 
     if bolts:
-        # Arc électrique occasionnel entre deux touffes voisines. Rare et
-        # fin : s'il apparaît à chaque frame et en épais, la couronne se lit
-        # comme un haltère au lieu de nuages séparés.
+        # Arc électrique entre deux touffes voisines. Il ne clignote pas au
+        # hasard : il apparaît sur une fenêtre de phases précise et dure
+        # plusieurs frames, ce qui se lit comme une décharge et non comme du
+        # bruit. `n_phases` permet de caler la fenêtre sur la longueur réelle
+        # de l'animation.
         fronts = [p for p in puffs if not p.behind]
-        if len(fronts) >= 2 and rng.random() < 0.3:
-            a, b = rng.choice(len(fronts), size=2, replace=False)
-            pa, pb = fronts[int(a)], fronts[int(b)]
-            # uniquement si les touffes sont assez proches
-            if abs(pa.x - pb.x) < (pa.scale + pb.scale) * 2.6:
+        cycle = (phase * bolt_cycles) % 1.0
+        if len(fronts) >= 2 and cycle < 0.34:
+            pa, pb = fronts[0], fronts[-1]
+            if abs(pa.x - pb.x) < (pa.scale + pb.scale) * 2.8:
+                # graine liée à la décharge (pas à la frame) : le zigzag
+                # garde sa forme pendant toute la durée de l'arc.
+                # Modulo bolt_cycles => périodique, la boucle se referme.
+                strike = int(phase * bolt_cycles) % max(1, int(bolt_cycles))
+                brng = np.random.default_rng(seed * 31 + strike)
                 P.draw_bolt(front,
                             (pa.x, pa.y - pa.scale * 0.75),
                             (pb.x, pb.y - pb.scale * 0.75),
-                            rng, segments=4, amplitude=2.2,
-                            core=C.IDX_RIM, halo=0)
-        # étincelles orbitales
-        halo = np.zeros((h, w), dtype=bool)
-        P.ellipse_mask(halo, cx, cy, rx * 1.25, ry * 0.9)
-        halo &= (front == 0) & (back == 0)
-        P.sprinkle(front, halo, int(rng.integers(1, 4)), C.IDX_RIM, rng)
+                            brng, segments=4, amplitude=1.6,
+                            core=C.IDX_RIM, halo=0,
+                            bow=2.0 + pa.scale * 0.35)
+
+        # Étincelles orbitales : elles tournent avec la couronne au lieu de
+        # se téléporter, en suivant l'ellipse.
+        n_sparks = 3
+        spark_turns = 2          # entier => les étincelles bouclent aussi
+        for k in range(n_sparks):
+            a = 2 * math.pi * (phase * spark_turns + k / n_sparks)
+            sx = cx + math.cos(a) * rx * 1.22
+            sy = cy + math.sin(a) * ry * 0.72
+            xi, yi = int(round(sx)), int(round(sy))
+            if 0 <= xi < w and 0 <= yi < h and front[yi, xi] == 0 \
+                    and back[yi, xi] == 0:
+                front[yi, xi] = C.IDX_RIM
 
     return back, front
 

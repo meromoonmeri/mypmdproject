@@ -28,6 +28,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
+from . import aura as AU
 from . import clouds as CL
 from . import config as C
 from . import graphicscale as GS
@@ -54,6 +55,22 @@ class DynamaxParams:
     seed: int = 1
     revolutions: float = 1.0        # tours effectués sur une boucle d'anim
     shadow_scale: float = 0.0       # 0 = suit `scale`
+
+    # --- aura de fluide rouge, calquée sur la silhouette ---------------
+    aura: bool = True               # activer l'aura ondulante
+    aura_reach: float = 0.0         # 0 = auto (proportionnel au sprite)
+    aura_strength: float = 1.0      # intensité
+    aura_cycles: float = 1.0        # ondulations par boucle d'animation
+
+    def aura_params(self, sprite_w: int) -> "AU.AuraParams":
+        """Réglages d'aura adaptés à la taille du sprite agrandi."""
+        reach = self.aura_reach
+        if reach <= 0:
+            # ~1/9 de la largeur, borné : au-delà, l'aura empâte la
+            # silhouette et vient manger la couronne de nuages.
+            reach = max(3.0, min(8.0, sprite_w / 9.0))
+        return AU.AuraParams(reach=reach, strength=self.aura_strength,
+                             seed=self.seed)
 
     def resolved_cloud_scale(self, sprite_w: int) -> float:
         if self.cloud_scale > 0:
@@ -161,12 +178,16 @@ def _scale_shadow_tile(src: np.ndarray, factor: float, anchor: Tuple[int, int],
 def build_tile(anim_tile: np.ndarray, off_tile: np.ndarray, sdw_tile: np.ndarray,
                out_w: int, out_h: int, params: DynamaxParams,
                cloud: Optional[Tuple[np.ndarray, np.ndarray, int, int]],
-               src_rel_center: Tuple[int, int]) -> TileResult:
+               src_rel_center: Tuple[int, int],
+               aura_params: Optional["AU.AuraParams"] = None,
+               aura_phase: float = 0.0) -> TileResult:
     """
     Construit une tuile Dynamax à partir d'une tuile d'origine.
 
     `cloud` = (back, front, cx_local, cy_local) issu du CloudCache, ou None
     pour ne pas ajouter de nuages (frames vides).
+    `aura_params` / `aura_phase` : aura de fluide rouge calquée sur la
+    silhouette agrandie, ou None pour s'en passer.
     """
     f = params.scale
     anim_out = np.zeros((out_h, out_w, 4), dtype=np.uint8)
@@ -212,6 +233,17 @@ def build_tile(anim_tile: np.ndarray, off_tile: np.ndarray, sdw_tile: np.ndarray
         back, front, ccx, ccy = cloud
         bx, by = cloud_anchor[0] - ccx, cloud_anchor[1] - ccy
         SH.paste(anim_out, P.to_rgba(back), bx, by)
+
+    # --- aura : dérivée de la silhouette AGRANDIE, posée sous le sprite ---
+    # On la calcule après l'échelle pour qu'elle épouse exactement les pixels
+    # finaux (oreilles, ailes, queue...) et non une silhouette approximée.
+    if aura_params is not None and bounds is not None:
+        canvas = np.zeros((out_h, out_w, 4), dtype=np.uint8)
+        SH.paste(canvas, big, px, py)
+        sil = AU.silhouette(canvas)
+        if sil.any():
+            aura_idx = AU.render_aura(sil, aura_phase, aura_params)
+            SH.paste(anim_out, P.to_rgba(aura_idx), 0, 0)
 
     SH.paste(anim_out, big, px, py)
 
@@ -295,6 +327,15 @@ def _needed_tile_size(src: SH.AnimSheet, params: DynamaxParams
     cloud_margin_x = orbit_rx + cloud_scale * 1.8 + 3
     cloud_margin_y = cloud_scale * 1.8 + params.orbit_ry * 0.5 + params.bob + 3
 
+    # l'aura déborde tout autour de la silhouette
+    aura_m = 0
+    if params.aura:
+        aura_m = AU.aura_margin(params.aura_params(int(sprite_w * f)))
+    max_l += aura_m
+    max_r += aura_m
+    max_u += aura_m
+    max_d += aura_m
+
     # les nuages débordent en haut et sur les côtés
     max_l = max(max_l, cloud_margin_x)
     max_r = max(max_r, cloud_margin_x)
@@ -334,14 +375,23 @@ def dynamax_anim(src: SH.AnimSheet, params: DynamaxParams,
     offs = SH.blank(tile_w * n_f, tile_h * n_d)
     sdw = SH.blank(tile_w * n_f, tile_h * n_d)
 
+    # L'aura est calée sur la longueur de l'animation : `aura_cycles` ondes
+    # complètes par boucle, donc la dernière frame se raccorde à la première.
+    ap = None
+    if params.aura:
+        sprite_w = max(8, int(src.tile_w * params.scale))
+        ap = params.aura_params(sprite_w)
+
     for fr in range(n_f):
         cloud = cache.get(fr, n_f, cloud_scale, orbit_rx) if with_clouds else None
+        aura_phase = (fr / max(1, n_f)) * params.aura_cycles
         for d in range(n_d):
             res = build_tile(
                 src.tile("anim", fr, d),
                 src.tile("offsets", fr, d),
                 src.tile("shadow", fr, d),
-                tile_w, tile_h, params, cloud, rc)
+                tile_w, tile_h, params, cloud, rc,
+                aura_params=ap, aura_phase=aura_phase)
             x, y = fr * tile_w, d * tile_h
             anim[y:y + tile_h, x:x + tile_w] = res.anim
             offs[y:y + tile_h, x:x + tile_w] = res.offsets

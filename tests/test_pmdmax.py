@@ -523,3 +523,134 @@ def test_every_tile_has_exactly_one_shadow_anchor(tmp_path):
         for d in range(s.n_dirs):
             n = len(SH.find_pixels(s.tile("shadow", f, d), C.SDW_CENTER))
             assert n == 1, f"{n} ancres blanches en frame {f} dir {d}"
+
+
+# --------------------------------------------------------------------------
+# aura de fluide (adaptée à la silhouette)
+# --------------------------------------------------------------------------
+
+from pmdmax import aura as AU  # noqa: E402
+
+
+def _blob(w=24, h=24, r=7):
+    m = np.zeros((h, w), dtype=bool)
+    P.disc_mask(m, w / 2, h / 2, r)
+    return m
+
+
+def test_aura_hugs_silhouette():
+    """L'aura entoure la forme sans jamais déborder à l'intérieur."""
+    m = _blob()
+    out = AU.render_aura(m, 0.0, AU.AuraParams(reach=6.0))
+    assert (out > 0).any(), "aucune aura produite"
+    assert not (out[m] > 0).any(), "l'aura empiète sur le sprite"
+
+
+def test_aura_adapts_to_shape():
+    """Deux silhouettes différentes donnent deux auras différentes."""
+    a = np.zeros((28, 28), dtype=bool)
+    P.disc_mask(a, 14, 14, 8)
+    b = np.zeros((28, 28), dtype=bool)
+    P.rect_mask(b, 6, 4, 12, 24)          # forme allongée
+    oa = AU.render_aura(a, 0.2, AU.AuraParams(reach=6.0))
+    ob = AU.render_aura(b, 0.2, AU.AuraParams(reach=6.0))
+    assert not np.array_equal(oa, ob)
+
+
+def test_aura_animates_and_loops():
+    """L'aura bouge entre les frames et boucle exactement."""
+    m = _blob()
+    p = AU.AuraParams(reach=6.0, seed=3)
+    f0 = AU.render_aura(m, 0.0, p)
+    f1 = AU.render_aura(m, 0.25, p)
+    assert not np.array_equal(f0, f1), "l'aura est figée"
+    # phase 1.0 == phase 0.0 : la boucle se referme sans saut
+    assert np.array_equal(f0, AU.render_aura(m, 1.0, p))
+
+
+def test_aura_motion_is_gradual():
+    """Pas de scintillement : deux frames voisines restent proches."""
+    m = _blob(32, 32, 9)
+    p = AU.AuraParams(reach=7.0, seed=1)
+    N = 12
+    frames = [AU.render_aura(m, i / N, p) for i in range(N)]
+    total = int((frames[0] > 0).sum())
+    for i in range(N):
+        d = int((frames[i] != frames[(i + 1) % N]).sum())
+        assert d < total * 1.3, f"saut trop brutal entre {i} et {i+1}"
+
+
+def test_aura_stays_in_palette():
+    m = _blob()
+    out = AU.render_aura(m, 0.4, AU.AuraParams(reach=6.0))
+    assert out.max() <= 6
+    rgba = AU.render_aura_rgba(m, 0.4, AU.AuraParams(reach=6.0))
+    assert GS.palette_of(rgba) <= set(C.DYNA_RAMP[1:])
+
+
+def test_aura_strength_zero_is_empty():
+    m = _blob()
+    out = AU.render_aura(m, 0.0, AU.AuraParams(reach=6.0, strength=0.0))
+    assert not (out > 0).any()
+
+
+def test_edt_outside_is_exact():
+    """La distance doit être euclidienne, pas Manhattan."""
+    m = np.zeros((11, 11), dtype=bool)
+    m[5, 5] = True
+    d = AU.edt_outside(m, 5.0)
+    assert d[5, 5] == 0.0
+    assert abs(float(d[5, 8]) - 3.0) < 1e-5
+    assert abs(float(d[8, 9]) - 5.0) < 1e-5      # (3,4,5)
+
+
+def test_clouds_loop_exactly():
+    """La couronne de nuages boucle : phase 1.0 == phase 0.0."""
+    a = CL.render_cloud_layer(48, 32, 24, 16, phase=0.0, seed=2)
+    b = CL.render_cloud_layer(48, 32, 24, 16, phase=1.0, seed=2)
+    assert np.array_equal(a[0], b[0]) and np.array_equal(a[1], b[1])
+
+
+def test_clouds_motion_is_gradual():
+    """Fluidité : pas de saut brutal d'une frame de nuage à l'autre."""
+    N = 12
+    merged = []
+    for i in range(N):
+        b, f = CL.render_cloud_layer(48, 36, 24, 18, phase=i / N,
+                                     count=3, base_scale=4.2, seed=1)
+        m = b.copy()
+        sel = (m == 0) & (f > 0)
+        m[sel] = f[sel]
+        merged.append(m)
+    ref = int((merged[0] > 0).sum())
+    for i in range(N):
+        d = int((merged[i] != merged[(i + 1) % N]).sum())
+        assert d < ref * 1.6, f"nuages : saut trop brutal entre {i} et {i+1}"
+
+
+@needs_upstream
+def test_aura_present_on_every_frame(tmp_path):
+    """L'aura doit être appliquée à toutes les frames et directions."""
+    out = str(tmp_path / "dyna")
+    DX.dynamax_folder(PIKACHU, out, DX.DynamaxParams(scale=1.6, aura=True),
+                      only=["Walk"], verbose=False)
+    data = SH.read_anim_data(os.path.join(out, C.MULTI_SHEET_XML))
+    s = SH.read_sheet(out, data.get("Walk"))
+    for f in range(s.n_frames):
+        for d in range(s.n_dirs):
+            pal = GS.palette_of(s.tile("anim", f, d))
+            assert C.DYNA_RIM in pal or C.DYNA_BRIGHT in pal, \
+                f"pas d'aura en frame {f} direction {d}"
+
+
+@needs_upstream
+def test_no_aura_flag_is_respected(tmp_path):
+    a = str(tmp_path / "with")
+    b = str(tmp_path / "without")
+    DX.dynamax_folder(PIKACHU, a, DX.DynamaxParams(scale=1.6, aura=True),
+                      only=["Walk"], verbose=False)
+    DX.dynamax_folder(PIKACHU, b, DX.DynamaxParams(scale=1.6, aura=False),
+                      only=["Walk"], verbose=False)
+    ia = SH.load_rgba(os.path.join(a, "Walk-Anim.png"))
+    ib = SH.load_rgba(os.path.join(b, "Walk-Anim.png"))
+    assert int((ia[:, :, 3] > 0).sum()) > int((ib[:, :, 3] > 0).sum())

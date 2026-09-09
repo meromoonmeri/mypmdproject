@@ -6,7 +6,8 @@ Générateur de sprites **Dynamax** pour *Pokémon Mystery Dungeon*, au format
 À partir d'un sprite existant, l'outil produit :
 
 1. **le Pokémon agrandi** avec **les nuages rouges qui tournoient au-dessus
-   de sa tête**, appliqué à **toutes ses animations** (les 8 directions et
+   de sa tête** et **l'aura de fluide rouge ondulant qui épouse sa
+   silhouette**, appliqués à **toutes ses animations** (les 8 directions et
    toutes les frames) ;
 2. **une animation de transformation en plusieurs frames**, à part : une
    **colonne d'énergie rouge opaque** lui tombe dessus, puis **plusieurs
@@ -64,6 +65,10 @@ python3 -m venv .venv
 | `--orbit-rx` | rayon de l'orbite | auto |
 | `--revolutions` | tours de nuages par boucle d'animation | `1.0` |
 | `--no-bolts` | supprime les arcs électriques | — |
+| `--no-aura` | désactive l'aura de fluide | — |
+| `--aura-reach` | portée de l'aura en pixels | auto |
+| `--aura-strength` | intensité de l'aura (0..1) | `1.0` |
+| `--aura-cycles` | ondulations par boucle d'animation | `1.0` |
 | `--anims Walk,Idle` | limite le traitement (test rapide) | toutes |
 | `--transform-frames` | frames de la transformation | `16` |
 | `--seed` | graine aléatoire (reproductible) | `1` |
@@ -133,6 +138,39 @@ plus petites et plus sombres, celles qui passent **devant** sont plus grosses
 et plus claires — la couronne est donc composée en **deux passes**, sous et
 sur le sprite, ce qui donne la vraie sensation de rotation.
 
+### Fluidité de l'animation
+
+Trois règles, vérifiées par des tests :
+
+- **rien n'est tiré au hasard par frame.** La forme des lobes d'une touffe
+  dépend de son identité, pas du temps : sans ça, chaque nuage grésille.
+- **toutes les fréquences sont entières en phase.** La frame N se raccorde
+  donc exactement à la frame 0 (`test_clouds_loop_exactly`,
+  `test_aura_animates_and_loops` comparent phase 1.0 et phase 0.0 au pixel
+  près).
+- **les événements durent.** Un arc électrique s'étale sur plusieurs frames
+  avec un zigzag figé, au lieu de clignoter aléatoirement.
+
+Deux tests mesurent le nombre de pixels qui changent entre frames voisines et
+échouent si un saut brutal apparaît.
+
+### L'aura de fluide rouge
+
+Elle n'est pas plaquée : elle est **dérivée du sprite lui-même**, après
+agrandissement. Pour chaque frame et chaque direction, on calcule la
+**distance euclidienne** à la silhouette réelle, puis on module la portée par
+un champ d'ondes exprimé dans le repère **angulaire** de la forme.
+
+Conséquence : les oreilles de Pikachu, les ailes de Dracaufeu ou la rondeur
+d'Ectoplasma produisent automatiquement une aura qui épouse leur contour,
+sans le moindre réglage manuel. Le rendu se fait en trois zones — gaine rose
+fine collée au trait, lueur, puis langues de fluide qui s'étirent vers le
+haut et se dissolvent en tramage.
+
+Les planches de référence par Pokémon (`refs/aura_*.png`) ont été produites
+en repassant les **vrais sprites** dans le générateur d'images ; elles ont
+servi à caler la direction artistique du module.
+
 ## L'animation de transformation
 
 16 frames, minutées comme dans le jeu (montée lente, impact très bref) :
@@ -172,7 +210,7 @@ Offsets   ← référence
 ## Tests
 
 ```bash
-.venv/bin/python -m pytest tests/ -v     # 53 tests
+.venv/bin/python -m pytest tests/ -v     # 64 tests
 ```
 
 Ils couvrent notamment : l'invariance de palette de tous les facteurs
@@ -189,6 +227,7 @@ pmdmax/
   graphicscale.py  EPX/Scale2x/Scale3x, sans création de couleur
   sheet.py         triplets Anim/Offsets/Shadow + AnimData.xml
   clouds.py        nuages tournoyants
+  aura.py          aura de fluide ondulant, calquée sur la silhouette
   beam.py          colonne d'énergie + éclairs spiralés
   dynamax.py       pipeline sprite normal -> Dynamax
   transform.py     animation de transformation
@@ -199,7 +238,7 @@ pmdmax/
 tools/
   fetch_upstream.sh  clone partiel de SpriteCollab
   gallery.py         galerie HTML
-tests/               53 tests
+tests/               64 tests
 ```
 
 ## Licence et usage

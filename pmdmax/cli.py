@@ -57,6 +57,10 @@ def _params_from_args(a: argparse.Namespace) -> DX.DynamaxParams:
         bolts=not a.no_bolts,
         seed=a.seed,
         revolutions=a.revolutions,
+        aura=not a.no_aura,
+        aura_reach=a.aura_reach,
+        aura_strength=a.aura_strength,
+        aura_cycles=a.aura_cycles,
     )
 
 
@@ -229,6 +233,14 @@ def build_parser() -> argparse.ArgumentParser:
                    help="tours de nuages par boucle d'animation")
     b.add_argument("--no-bolts", action="store_true",
                    help="pas d'arcs électriques entre les nuages")
+    b.add_argument("--no-aura", action="store_true",
+                   help="désactive l'aura de fluide rouge")
+    b.add_argument("--aura-reach", type=float, default=0.0,
+                   help="portée de l'aura en pixels (0 = auto)")
+    b.add_argument("--aura-strength", type=float, default=1.0,
+                   help="intensité de l'aura (0..1)")
+    b.add_argument("--aura-cycles", type=float, default=1.0,
+                   help="ondulations d'aura par boucle d'animation")
     b.add_argument("--seed", type=int, default=1)
     b.add_argument("--anims", help="liste d'animations (ex: Walk,Idle,Attack)")
     b.add_argument("--no-transform", action="store_true")

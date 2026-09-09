@@ -172,10 +172,13 @@ def draw_polyline(idx: np.ndarray, pts: Sequence[Point], val: int, thick: int = 
 
 
 def jagged_path(p0: Point, p1: Point, segments: int, amplitude: float,
-                rng: np.random.Generator) -> List[Point]:
+                rng: np.random.Generator, bow: float = 0.0) -> List[Point]:
     """
     Chemin en zigzag entre deux points : l'ossature d'un éclair.
     Le décalage est perpendiculaire au trajet et s'annule aux extrémités.
+
+    `bow` cintre le trajet (en pixels, vers le haut) : sans lui, un arc entre
+    deux points de même hauteur donne une barre horizontale peu crédible.
     """
     segments = max(2, segments)
     dx, dy = p1[0] - p0[0], p1[1] - p0[1]
@@ -187,19 +190,21 @@ def jagged_path(p0: Point, p1: Point, segments: int, amplitude: float,
         # fenêtre : 0 aux bouts, max au milieu
         window = math.sin(math.pi * t)
         off = float(rng.uniform(-amplitude, amplitude)) * window
-        pts.append((p0[0] + dx * t + nx * off, p0[1] + dy * t + ny * off))
+        pts.append((p0[0] + dx * t + nx * off,
+                    p0[1] + dy * t + ny * off - bow * window))
     return pts
 
 
 def draw_bolt(idx: np.ndarray, p0: Point, p1: Point, rng: np.random.Generator,
               segments: int = 6, amplitude: float = 2.5,
               core: int = C.IDX_RIM, halo: int = C.IDX_MID,
-              branches: int = 0) -> None:
+              branches: int = 0, bow: float = 0.0) -> None:
     """
     Éclair : un halo épais (RIM) puis un cœur fin (CORE) par-dessus.
     `branches` ajoute des ramifications courtes partant du tronc.
+    `bow` cintre l'éclair vers le haut.
     """
-    pts = jagged_path(p0, p1, segments, amplitude, rng)
+    pts = jagged_path(p0, p1, segments, amplitude, rng, bow=bow)
     if halo:
         draw_polyline(idx, pts, halo, thick=2)
     draw_polyline(idx, pts, core, thick=1)
