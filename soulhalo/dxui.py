@@ -269,17 +269,34 @@ class ChoiceList:
         n * VERT_SPACE + bordures + ContentOffset."""
         return n * VERT_SPACE + 4 + (TITLE_OFFSET if titled else 0)
 
-    def draw(self, buf, x, y, w, items, index=0, title=None, tick=0):
+    @staticmethod
+    def window(n, index, max_rows):
+        """Premier indice visible pour que `index` reste dans le cadre.
+
+        Sans ça, une liste plus longue que la fenêtre rend ses derniers
+        éléments INATTEIGNABLES : c'était le cas des 13 natures, dont 9
+        étaient tronquées par un simple découpage `[:4]`.
+        """
+        if max_rows is None or n <= max_rows:
+            return 0
+        # on garde le curseur au centre tant que les bords le permettent
+        top = index - max_rows // 2
+        return int(np.clip(top, 0, n - max_rows))
+
+    def draw(self, buf, x, y, w, items, index=0, title=None, tick=0,
+             max_rows=None):
         n = len(items)
-        h = self.height(n, title is not None)
+        top = self.window(n, index, max_rows)
+        shown = items[top:top + max_rows] if max_rows else list(items)
+        h = self.height(len(shown), title is not None)
         self.frame.draw(buf, x, y, w, h, title=title)
         s = self.frame.s
         if title:
             draw_text(buf, title, x + 4, y + 3, s.title)
         y0 = y + 2 + (TITLE_OFFSET if title else 2)
-        for i, it in enumerate(items):
+        for i, it in enumerate(shown):
             yy = y0 + i * VERT_SPACE
-            if i == index:
+            if top + i == index:
                 # curseur clignotant, période ENTIÈRE : pas de dérive
                 blink = 0.65 + 0.35 * float(np.cos(TAU * (tick % 30) / 30.0))
                 H, W = buf.shape[:2]
@@ -290,7 +307,13 @@ class ChoiceList:
                     buf[y1:y2, x1:x2] = buf[y1:y2, x1:x2] * 0.45 + c * 0.55
             lbl = str(it).replace("_", " ")
             draw_text(buf, lbl, x + 6, yy + 1,
-                      s.fill if i == index else s.text)
+                      s.fill if top + i == index else s.text)
+        # chevrons : signaler qu'il reste des entrées hors du cadre
+        if max_rows and n > max_rows:
+            if top > 0:
+                draw_text(buf, "-", x + w - 10, y + 3, s.dim)
+            if top + max_rows < n:
+                draw_text(buf, "-", x + w - 10, y + h - 9, s.dim)
         return h
 
 
@@ -384,6 +407,27 @@ _GLYPHS = {
     "7": ["11111", "00001", "00010", "00100", "01000", "01000", "01000"],
     "8": ["01110", "10001", "10001", "01110", "10001", "10001", "01110"],
     "9": ["01110", "10001", "10001", "01111", "00001", "00010", "01100"],
+    # accents francais : sans eux « Naïf » et « Presse » s'affichaient
+    # troues (« NA F »). La grille 5x7 n'a pas de place au-dessus des
+    # capitales, donc l'accent mord sur la premiere ligne du glyphe.
+    "É": ["00010", "11111", "10000", "11110", "10000", "10000", "11111"],
+    "È": ["01000", "11111", "10000", "11110", "10000", "10000", "11111"],
+    "Ê": ["00100", "11111", "10000", "11110", "10000", "10000", "11111"],
+    "Ï": ["01010", "11111", "00100", "00100", "00100", "00100", "11111"],
+    "Î": ["00100", "11111", "00100", "00100", "00100", "00100", "11111"],
+    "À": ["01000", "01110", "10001", "11111", "10001", "10001", "10001"],
+    "Â": ["00100", "01110", "10001", "11111", "10001", "10001", "10001"],
+    "Ô": ["00100", "01110", "10001", "10001", "10001", "10001", "01110"],
+    "Û": ["00100", "10001", "10001", "10001", "10001", "10001", "01110"],
+    "Ù": ["01000", "10001", "10001", "10001", "10001", "10001", "01110"],
+    "Ç": ["01111", "10000", "10000", "10000", "10000", "01111", "00100"],
+    "_": ["00000", "00000", "00000", "00000", "00000", "00000", "11111"],
+    ":": ["00000", "01100", "01100", "00000", "01100", "01100", "00000"],
+    ",": ["00000", "00000", "00000", "00000", "01100", "01100", "01000"],
+    "/": ["00001", "00010", "00010", "00100", "01000", "01000", "10000"],
+    "+": ["00000", "00100", "00100", "11111", "00100", "00100", "00000"],
+    "(": ["00010", "00100", "01000", "01000", "01000", "00100", "00010"],
+    ")": ["01000", "00100", "00010", "00010", "00010", "00100", "01000"],
     "-": ["00000", "00000", "00000", "11111", "00000", "00000", "00000"],
     "'": ["00100", "00100", "00000", "00000", "00000", "00000", "00000"],
     ".": ["00000", "00000", "00000", "00000", "00000", "01100", "01100"],

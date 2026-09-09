@@ -213,3 +213,100 @@ def test_paillettes_deterministes():
     buf = new_screen(320, 240)
     assert np.array_equal(s._sparkles(buf.copy(), 0.3, 1.0),
                           s._sparkles(buf.copy(), 0.3, 1.0))
+
+
+# --- choix du talent et de la nature --------------------------------------
+def test_les_13_natures_sont_chargees():
+    """Une liste ecrite en dur en avait oublie 5 ; elles viennent du JSON."""
+    s = SelectorScreen()
+    assert len(s.natures) == 13
+
+
+def test_toutes_les_natures_sont_atteignables():
+    """Defaut corrige : la liste etait decoupee a [:4], donc 9 natures
+    etaient impossibles a selectionner."""
+    s = SelectorScreen()
+    vues = set()
+    for _ in range(40):
+        vues.add(s.selection()["nature"])
+        s.move_nature(1)
+    assert len(vues) == 13
+    assert s.nature_idx == 12          # borne haute, pas de bouclage sauvage
+    for _ in range(40):
+        s.move_nature(-1)
+    assert s.nature_idx == 0
+
+
+def test_fenetre_de_liste_garde_le_curseur_visible():
+    cl = ChoiceList()
+    for i in range(13):
+        top = cl.window(13, i, 4)
+        assert 0 <= top <= 13 - 4
+        assert top <= i < top + 4      # le curseur est DANS la fenetre
+
+
+def test_liste_courte_ne_defile_pas():
+    assert ChoiceList.window(2, 1, 4) == 0
+
+
+def test_le_talent_suit_l_espece():
+    """Zorua n'a qu'un talent : le curseur ne doit pas rester a 1."""
+    s = SelectorScreen()
+    multi = next(i for i, m in enumerate(s.roster) if len(m["talents"]) > 1)
+    solo = next(i for i, m in enumerate(s.roster) if len(m["talents"]) == 1)
+    s.wheel.pos = float(multi)
+    s.move_talent(1)
+    assert s.talent_idx == 1
+    s.wheel.pos = float(solo)
+    s.step()
+    assert s.talent_idx == 0
+    assert s.selection()["talent"] == s.roster[solo]["talents"][0]
+
+
+def test_selection_complete():
+    s = SelectorScreen()
+    sel = s.selection()
+    for k in ("dex", "slug", "nom", "type", "talent", "nature", "nature_rgb"):
+        assert k in sel
+    assert sel["talent"] in s.roster[s.wheel.index]["talents"]
+
+
+def test_choisir_ne_fait_pas_avancer_le_temps():
+    """Regle du projet : l'entree joueur ne touche jamais a la boucle."""
+    s = SelectorScreen()
+    s.move_nature(7)
+    s.move_talent(1)
+    assert np.array_equal(s.render(0.0), s.render(1.0))
+
+
+def test_roster_sans_orphelin(R):
+    """Le dossier de sprites doit correspondre EXACTEMENT au roster."""
+    import os
+    dirs = {d for d in os.listdir("personality_test/sprites")
+            if not d.startswith(".")}
+    assert dirs == {m["dex"] for m in R["roster"]}
+
+
+def test_la_fonte_couvre_tout_le_texte_affiche(R):
+    """Le jeu est en francais : sans accents, « Naif » s'affichait « NA F ».
+    Aucun libelle du jeu ne doit tomber sur un glyphe manquant."""
+    import json
+    from soulhalo.dxui import _GLYPHS
+    txt = set()
+    for e in R["roster"]:
+        txt |= set(e["nom"].upper()) | set("".join(e["talents"]).upper())
+    for t in R["types"].values():
+        txt |= set(t["fr"].upper())
+    with open("personality_test/natures.json", encoding="utf-8") as f:
+        for n in json.load(f)["natures"]:
+            txt |= set(n["fr"].upper())
+    manquants = sorted(c for c in txt if c not in _GLYPHS)
+    assert manquants == [], f"glyphes manquants : {manquants}"
+
+
+def test_glyphes_bien_formes():
+    """Chaque glyphe doit tenir exactement dans la grille 5x7."""
+    from soulhalo.dxui import GLYPH_H, GLYPH_W, _GLYPHS
+    for ch, g in _GLYPHS.items():
+        assert len(g) == GLYPH_H, ch
+        assert all(len(r) == GLYPH_W and set(r) <= {"0", "1"} for r in g), ch

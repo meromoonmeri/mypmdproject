@@ -2,11 +2,29 @@
   "moteur": "parametres PMDO reels (RogueCollab/RogueEssence) : VERT_SPACE=14, LINE_HEIGHT=12, TITLE_OFFSET=16, PortraitSize=40",
   "ecran_logique": "320x240 puis agrandissement ENTIER au plus proche voisin",
   "roster": 42,
-  "frames": 48,
-  "fps": 20,
-  "molette": "WheelState, inertie, friction 0.82, pos continu",
-  "paillettes": "uniquement en mouvement, graine fixe",
-  "separation": "step() avance l'etat, render() est pur",
+  "natures": 13,
+  "loops": [
+    {
+      "nom": "scroll",
+      "frames": 48,
+      "fps": 20,
+      "duree_s": 2.4,
+      "boucle": "phase 0 -> 1, render(0.0) == render(1.0)",
+      "entree": "molette (WheelState, friction 0.82, pos continu)",
+      "effet": "paillettes proportionnelles a |vel|, graine fixe"
+    },
+    {
+      "nom": "choice",
+      "frames": 36,
+      "fps": 20,
+      "duree_s": 1.8,
+      "boucle": "phase 0 -> 1",
+      "entree": "curseur nature, fenetre defilante de 4 lignes sur 13",
+      "effet": "curseur clignotant de periode entiere (tick % 30)"
+    }
+  ],
   "vignette": "portrait 40x40 encadre AU-DESSUS, sprite anime en dessous",
-  "sprites": "SpriteCollab, durees d'AnimData.xml"
+  "sprites": "SpriteCollab, durees lues dans AnimData.xml",
+  "separation": "step() avance l'etat, render() est pur",
+  "selection": "espece + talent + nature -> SelectorScreen.selection()"
 }
