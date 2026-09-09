@@ -12,3 +12,6 @@ external/
 # Aperçus régénérables (garde les sprites, pas les GIF lourds)
 output/*/preview/
 output/*/ase/
+
+# rendus soulhalo (regenerables via `python -m soulhalo.cli`)
+output/soulhalo/frames/
