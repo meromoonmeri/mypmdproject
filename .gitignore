@@ -19,3 +19,4 @@ output/soulhalo/frames/
 # rendus regenerables (python -m soulhalo.cli)
 output/soulhalo*/frames/
 output/portal/frames/
+output/intro/*/

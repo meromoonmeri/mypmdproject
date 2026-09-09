@@ -1,0 +1,89 @@
+{
+  "fps": 20,
+  "resolution": "960x540",
+  "principe": "ANIMATION = BOUCLE INFINIE ; DIALOGUE = PROGRESSION",
+  "etats": [
+    {
+      "nom": "01_vide",
+      "description": "Ecran noir. La sphere-ame s'illumine et respire.",
+      "frames": 36,
+      "fps": 20,
+      "duree_s": 1.8,
+      "type": "boucle infinie",
+      "point_de_boucle": "frame_035 -> frame_000",
+      "raccord_exact": true,
+      "sortie": "declenchee par le joueur (touche CONTINUER), jamais par timer"
+    },
+    {
+      "nom": "02_ciel",
+      "description": "Bleu nuit etoile. Trois nappes d'etoiles en parallaxe.",
+      "frames": 36,
+      "fps": 20,
+      "duree_s": 1.8,
+      "type": "boucle infinie",
+      "point_de_boucle": "frame_035 -> frame_000",
+      "raccord_exact": true,
+      "sortie": "declenchee par le joueur (touche CONTINUER), jamais par timer"
+    },
+    {
+      "nom": "03_halo",
+      "description": "Halo de spectre arc-en-ciel. Le portail se forme.",
+      "frames": 36,
+      "fps": 20,
+      "duree_s": 1.8,
+      "type": "boucle infinie",
+      "point_de_boucle": "frame_035 -> frame_000",
+      "raccord_exact": true,
+      "sortie": "declenchee par le joueur (touche CONTINUER), jamais par timer"
+    },
+    {
+      "nom": "04_portail",
+      "description": "Voyage a l'interieur du tunnel d'energie.",
+      "frames": 36,
+      "fps": 20,
+      "duree_s": 1.8,
+      "type": "boucle infinie",
+      "point_de_boucle": "frame_035 -> frame_000",
+      "raccord_exact": true,
+      "sortie": "declenchee par le joueur (touche CONTINUER), jamais par timer"
+    }
+  ],
+  "transitions": [
+    {
+      "nom": "T1_ebranlement",
+      "description": "La sphere s'ebranle et part vers le ciel etoile.",
+      "frames": 18,
+      "fps": 20,
+      "duree_s": 0.9,
+      "type": "jouee UNE fois",
+      "depart": "01_vide phase 0",
+      "arrivee": "02_ciel phase 0",
+      "flash_blanc": 0.0,
+      "declencheur": "appui du joueur sur CONTINUER"
+    },
+    {
+      "nom": "T2_flash",
+      "description": "Arret du voyage, flash blanc progressif, le halo apparait.",
+      "frames": 18,
+      "fps": 20,
+      "duree_s": 0.9,
+      "type": "jouee UNE fois",
+      "depart": "02_ciel phase 0",
+      "arrivee": "03_halo phase 0",
+      "flash_blanc": 0.92,
+      "declencheur": "appui du joueur sur CONTINUER"
+    },
+    {
+      "nom": "T3_aspiration",
+      "description": "Le halo s'ouvre, la sphere est aspiree dans le portail.",
+      "frames": 18,
+      "fps": 20,
+      "duree_s": 0.9,
+      "type": "jouee UNE fois",
+      "depart": "03_halo phase 0",
+      "arrivee": "04_portail phase 0",
+      "flash_blanc": 0.35,
+      "declencheur": "appui du joueur sur CONTINUER"
+    }
+  ]
+}

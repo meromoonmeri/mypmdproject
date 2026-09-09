@@ -1,0 +1,233 @@
+{
+  "source": "github.com/Palikadude/Halcyon - Data/Script/ground/personality_test/init.lua",
+  "note": "Halcyon n'utilise PAS un quiz de personnalite : c'est une SELECTION DIRECTE du heros puis du partenaire.",
+  "starters_actifs": [
+    {
+      "espece": "charmander",
+      "forme": 0,
+      "egg_move": "metal_claw"
+    },
+    {
+      "espece": "squirtle",
+      "forme": 0,
+      "egg_move": "icy_wind"
+    },
+    {
+      "espece": "pikachu",
+      "forme": 0,
+      "egg_move": "disarming_voice"
+    },
+    {
+      "espece": "vulpix",
+      "forme": 0,
+      "egg_move": "tail_slap"
+    },
+    {
+      "espece": "vulpix",
+      "forme": 1,
+      "egg_move": "tail_slap"
+    },
+    {
+      "espece": "meowth",
+      "forme": 0,
+      "egg_move": "foul_play"
+    },
+    {
+      "espece": "meowth",
+      "forme": 1,
+      "egg_move": "foul_play"
+    },
+    {
+      "espece": "machop",
+      "forme": 0,
+      "egg_move": "bullet_punch"
+    },
+    {
+      "espece": "cubone",
+      "forme": 0,
+      "egg_move": "double_kick"
+    },
+    {
+      "espece": "eevee",
+      "forme": 0,
+      "egg_move": "double_kick"
+    },
+    {
+      "espece": "chikorita",
+      "forme": 0,
+      "egg_move": "refresh"
+    },
+    {
+      "espece": "cyndaquil",
+      "forme": 0,
+      "egg_move": "double_kick"
+    },
+    {
+      "espece": "totodile",
+      "forme": 0,
+      "egg_move": "aqua_jet"
+    },
+    {
+      "espece": "phanpy",
+      "forme": 0,
+      "egg_move": "ice_shard"
+    },
+    {
+      "espece": "treecko",
+      "forme": 0,
+      "egg_move": "dragon_breath"
+    },
+    {
+      "espece": "torchic",
+      "forme": 0,
+      "egg_move": "low_kick"
+    },
+    {
+      "espece": "mudkip",
+      "forme": 0,
+      "egg_move": "avalanche"
+    },
+    {
+      "espece": "skitty",
+      "forme": 0,
+      "egg_move": "zen_headbutt"
+    },
+    {
+      "espece": "turtwig",
+      "forme": 0,
+      "egg_move": "sand_tomb"
+    },
+    {
+      "espece": "chimchar",
+      "forme": 0,
+      "egg_move": "thunder_punch"
+    },
+    {
+      "espece": "piplup",
+      "forme": 0,
+      "egg_move": "icy_wind"
+    },
+    {
+      "espece": "shinx",
+      "forme": 0,
+      "egg_move": "ice_fang"
+    },
+    {
+      "espece": "munchlax",
+      "forme": 0,
+      "egg_move": "zen_headbutt"
+    },
+    {
+      "espece": "riolu",
+      "forme": 0,
+      "egg_move": "bullet_punch"
+    },
+    {
+      "espece": "snivy",
+      "forme": 0,
+      "egg_move": "twister"
+    },
+    {
+      "espece": "tepig",
+      "forme": 0,
+      "egg_move": "sucker_punch"
+    },
+    {
+      "espece": "oshawott",
+      "forme": 0,
+      "egg_move": "assurance"
+    },
+    {
+      "espece": "zorua",
+      "forme": 0,
+      "egg_move": "copycat"
+    },
+    {
+      "espece": "zorua",
+      "forme": 1,
+      "egg_move": "copycat"
+    },
+    {
+      "espece": "chespin",
+      "forme": 0,
+      "egg_move": "power_up_punch"
+    },
+    {
+      "espece": "fennekin",
+      "forme": 0,
+      "egg_move": "wish"
+    },
+    {
+      "espece": "froakie",
+      "forme": 0,
+      "egg_move": "mud_sport"
+    },
+    {
+      "espece": "skiddo",
+      "forme": 0,
+      "egg_move": "zen_headbutt"
+    },
+    {
+      "espece": "espurr",
+      "forme": 0,
+      "egg_move": "assist"
+    },
+    {
+      "espece": "rowlet",
+      "forme": 0,
+      "egg_move": "confuse_ray"
+    },
+    {
+      "espece": "litten",
+      "forme": 0,
+      "egg_move": "revenge"
+    },
+    {
+      "espece": "popplio",
+      "forme": 0,
+      "egg_move": "charm"
+    },
+    {
+      "espece": "rockruff",
+      "forme": 0,
+      "egg_move": "thunder_fang"
+    },
+    {
+      "espece": "scorbunny",
+      "forme": 0,
+      "egg_move": "assurance"
+    },
+    {
+      "espece": "yamper",
+      "forme": 0,
+      "egg_move": "flame_charge"
+    },
+    {
+      "espece": "sprigatito",
+      "forme": 0,
+      "egg_move": "copycat"
+    },
+    {
+      "espece": "charcadet",
+      "forme": 0,
+      "egg_move": "destiny_bond"
+    }
+  ],
+  "desactives_sprites_manquants": [
+    "houndour",
+    "magby",
+    "larvitar",
+    "poochyena",
+    "ralts",
+    "buizel",
+    "lillipup",
+    "minccino",
+    "vanillite",
+    "mienfoo",
+    "amaura",
+    "noibat",
+    "fomantis",
+    "wooloo",
+    "pawmi"
+  ]
+}
