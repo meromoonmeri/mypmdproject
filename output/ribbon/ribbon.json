@@ -1,0 +1,19 @@
+{
+  "idle": {
+    "frames": 36,
+    "fps": 20,
+    "type": "boucle infinie",
+    "raccord": "exact"
+  },
+  "hold": {
+    "frames": 30,
+    "fps": 20,
+    "type": "pilote par le joueur (maintien de la souris)",
+    "t": "0 = relache, 1 = charge complete",
+    "revelation": "demarre a t=0.45",
+    "relacher": "t revient a 0 sans rupture ; le fond n'est jamais interrompu"
+  },
+  "badge": "oeuf + deux ailes (Equipe de Secours), teinte par la nature",
+  "sprites": "SpriteCollab, natif PMDO",
+  "natures": "personality_test/natures.json"
+}
