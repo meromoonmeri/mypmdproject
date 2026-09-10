@@ -1,6 +1,6 @@
 # Structures Pokémon Donjon Mystère
 
-Dix planches originales de bâtiments inspirées de l’architecture de **Pokémon Donjon Mystère**.
+Douze planches originales de bâtiments et de stands inspirées de l’architecture de **Pokémon Donjon Mystère**.
 
 ## Format commun
 
@@ -27,6 +27,14 @@ Dix planches originales de bâtiments inspirées de l’architecture de **Pokém
 8. `08_marowak_dojo.png` — Dojo Ossatueur
 9. `09_pelipper_post_office.png` — Poste Bekipan
 10. `10_wigglytuff_guild_outpost.png` — Avant-poste de la Guilde Grodoudou
+11. `11_wobbuffet_stand.png` — Stand Qulbutoké : structure et disposition Arcanin conservées à l’identique, avec uniquement le masque et la palette remplacés
+12. `12_eevee_shop.png` — Boutique Évoli sur la structure et la texture DS de la hutte Arcanin ; yeux Arcanin repris pixel pour pixel, oreilles triangulaires Évoli et front sans frange
+
+Aperçus :
+
+- `apercu_10_structures.jpg` — collection initiale
+- `apercu_11_structures.jpg` — collection incluant le stand Qulbutoké
+- `apercu_12_structures.jpg` — collection incluant la boutique Évoli
 
 ## Références étudiées
 
