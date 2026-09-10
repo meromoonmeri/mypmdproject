@@ -126,6 +126,15 @@ class MenuStyle:
     text_on_band: tuple = (0.969, 0.929, 0.847)
     cursor: tuple = (1.000, 0.843, 0.322)
     dim: tuple = (0.435, 0.318, 0.176)
+    # Cerne du texte courant. Distinct de `border_in` : ce dernier est le
+    # bevel du cadre, et il se trouve etre clair. Sur un style a TEXTE
+    # CLAIR (PMDO), cerner du clair avec du clair rend le texte illisible.
+    # Le cerne doit toujours contraster avec la couleur du texte.
+    text_outline: tuple = (0.804, 0.671, 0.443)
+    # Texte de la ligne SELECTIONNEE, posee sur le bandeau de curseur jaune
+    # vif. Il lui faut sa propre couleur : reprendre `text` marchait en
+    # style DX (texte sombre) mais donnait du clair sur jaune en PMDO.
+    text_on_cursor: tuple = (0.204, 0.110, 0.047)
     # texture
     hatch: float = 0.06
     radius: int = 3
@@ -136,6 +145,45 @@ class MenuStyle:
     shadow_dx: int = 2
     shadow_dy: int = 2
     dither_levels: int = 16      # paliers par canal (0 = pas de tramage)
+
+
+def pmdo_style():
+    """Style de fenêtre PAR DÉFAUT de PMDO / RogueEssence.
+
+    Le moteur ne peint pas le parchemin de DX : sa fenêtre standard est un
+    bleu nuit dense, cerné d'un liseré clair, sans hachure ni relief
+    marqué. C'est la fenêtre que voit un joueur qui lance un mod PMDO sans
+    y toucher — donc celle du test de personnalité.
+
+    On ne touche PAS au moteur de rendu : `MenuFrame` reste le même, seul
+    le jeu de couleurs change. Le style DX reste disponible pour le reste
+    du jeu (badge, révélation).
+    """
+    return MenuStyle(
+        fill=(0.129, 0.161, 0.353),
+        fill_hi=(0.169, 0.204, 0.427),
+        fill_lo=(0.086, 0.106, 0.247),
+        fill_alpha=0.96,
+        border_out=(0.043, 0.055, 0.129),     # trait extérieur sombre
+        border_in=(0.898, 0.918, 0.976),      # liseré clair de RogueEssence
+        wood=(0.196, 0.239, 0.478),
+        band=(0.106, 0.133, 0.302),
+        teal=(0.216, 0.325, 0.494),
+        teal_lo=(0.129, 0.208, 0.345),
+        title=(1.000, 0.984, 0.945),
+        text=(0.965, 0.973, 0.996),           # texte CLAIR sur fond sombre
+        text_on_band=(0.898, 0.918, 0.976),
+        cursor=(1.000, 0.843, 0.322),
+        dim=(0.616, 0.655, 0.784),
+        text_outline=(0.043, 0.055, 0.129),   # cerne SOMBRE sous texte clair
+        text_on_cursor=(0.043, 0.055, 0.129),  # sombre sur le curseur jaune
+        hatch=0.0,                            # PMDO n'a pas de hachures
+        radius=2,                             # coins plus francs que DX
+        bevel=0.10,
+        shade=0.10,
+        shadow=0.34,
+        dither_levels=16,
+    )
 
 
 class MenuFrame:
@@ -436,7 +484,7 @@ class ChoiceList:
                     buf[y1:y2, x1:x2] = buf[y1:y2, x1:x2] * 0.62 + b * 0.38
             lbl = str(it).replace("_", " ")
             draw_text(buf, lbl, x + 7, yy + 1,
-                      s.text if sel else s.text_on_band,
+                      s.text_on_cursor if sel else s.text_on_band,
                       outline=None if sel else s.border_out)
         # chevrons : signaler qu'il reste des entrées hors du cadre
         if max_rows and n > max_rows:

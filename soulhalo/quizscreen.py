@@ -15,8 +15,9 @@ from PIL import Image
 from . import field as F
 from . import pixelart as PX
 from .dxui import (LINE_HEIGHT, SCREEN_H, SCREEN_W, ChoiceList, MenuFrame,
-                   VERT_SPACE, draw_text, new_screen, text_width, upscale)
-from .interactive import DreamBackdrop, LookState
+                   VERT_SPACE, draw_text, new_screen, pmdo_style, text_width,
+                   upscale)
+from .portalcam import Camera, PortalView
 from .quiz import QuizState
 
 TAU = F.TAU
@@ -42,20 +43,32 @@ class QuizScreen:
     """Écran de question. `render` est pur, `step` avance l'état."""
 
     def __init__(self, w=SCREEN_W, h=SCREEN_H, scale=3, seed=None,
-                 quiz: QuizState | None = None, pixel=True):
+                 quiz: QuizState | None = None, pixel=True, style=None):
         self.w, self.h, self.scale = int(w), int(h), int(scale)
         self.quiz = quiz if quiz is not None else QuizState(seed=seed)
-        self.frame = MenuFrame()
+        # UI PMDO PAR DÉFAUT : pendant le test on utilise la fenêtre
+        # standard du moteur, pas la transposition DX.
+        self.frame = MenuFrame(style or pmdo_style())
         self.list = ChoiceList(self.frame)
-        self.look = LookState()
-        self.dream = DreamBackdrop(w=self.w, h=self.h)
+        # Le décor des questions, c'est l'INTÉRIEUR DU PORTAIL, vu à la
+        # première personne. La caméra est pilotée par le joueur.
+        self.cam = Camera()
+        self.portal = PortalView(w=self.w, h=self.h, pixel=False)
         self.choix = 0
         self.pixel = bool(pixel)
 
     # -- entrée joueur -----------------------------------------------------
     def step(self, mouse=(0.0, 0.0)):
-        self.look.update(*mouse)
+        """Souris / stick : oriente le REGARD, rien d'autre.
+
+        Ne renvoie aucune progression et ne touche pas au quiz : bouger la
+        caméra ne peut pas répondre à une question. Seul `valider()` avance.
+        """
+        self.cam.update(*mouse)
         return self
+
+    # alias : le stick droit d'une manette pilote la même caméra
+    look_at = step
 
     def move(self, d):
         q = self.quiz.question
@@ -73,7 +86,10 @@ class QuizScreen:
 
     # -- rendu -------------------------------------------------------------
     def render(self, phase, tick=0):
-        buf = self.dream.render(float(phase) % 1.0, self.look) * 0.42
+        # Fond : on est DANS le portail. Il boucle tout seul ; la caméra
+        # n'influe que sur l'orientation. Assombri pour que le texte de la
+        # boîte de dialogue reste lisible par-dessus.
+        buf = self.portal.render(float(phase) % 1.0, self.cam) * 0.55
         s = self.frame.s
         q = self.quiz.question
         if q is None:
@@ -95,7 +111,7 @@ class QuizScreen:
         self.frame.panel(buf, 8, by, self.w - 16, bh, radius=4)
         for i, ln in enumerate(lignes):
             draw_text(buf, ln, 15, by + 7 + i * 11, s.text,
-                      outline=s.border_in)
+                      outline=s.text_outline)
 
         # reponses
         ly = by + bh + 4

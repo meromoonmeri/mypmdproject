@@ -464,7 +464,10 @@
         "#7a3a1e"
       ],
       "sources": [
-        "02_sol_tileset.png"
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
       ],
       "ambiances": {
         "normal": {
@@ -696,7 +699,10 @@
         "#0a2438"
       ],
       "sources": [
-        "02_sol_tileset.png"
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
       ],
       "ambiances": {
         "normal": {
@@ -786,6 +792,123 @@
             "09_bordure.png"
           ],
           "plat": "zones/Kyogre/cataclysme.png"
+        }
+      }
+    },
+    "Mewtwo": {
+      "legendaire": "Mewtwo",
+      "dex": "0150",
+      "type": [
+        "psy"
+      ],
+      "donjon": "Caverne de l'Ouest",
+      "donjon_en": "Western Cave",
+      "etage": "B20F",
+      "niveau": 70,
+      "arc": "post-histoire",
+      "biome": "caverne profonde et sombre, roche violacee",
+      "palette": [
+        "#120c1c",
+        "#2a1c3a",
+        "#4a3260",
+        "#7a5c96",
+        "#c0a8d8",
+        "#1c1428"
+      ],
+      "sources": [
+        "01_lointain.png",
+        "02_sol_tileset.png",
+        "04_props.png",
+        "07_fx.png"
+      ],
+      "ambiances": {
+        "normal": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Mewtwo/normal.png"
+        },
+        "combat": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Mewtwo/combat.png"
+        },
+        "sombre": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Mewtwo/sombre.png"
+        },
+        "cataclysme": {
+          "calques": [
+            "00_ciel.png",
+            "01_lointain.png",
+            "02_sol.png",
+            "03_murs.png",
+            "04_props.png",
+            "05_liquide.png",
+            "06_arene.png",
+            "07_fx_00.png",
+            "07_fx_01.png",
+            "07_fx_02.png",
+            "07_fx_03.png",
+            "07_fx_04.png",
+            "07_fx_05.png",
+            "07_fx_06.png",
+            "07_fx_07.png",
+            "08_eclairage.png",
+            "09_bordure.png"
+          ],
+          "plat": "zones/Mewtwo/cataclysme.png"
         }
       }
     }
