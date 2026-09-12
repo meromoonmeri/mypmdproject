@@ -28,7 +28,7 @@ Douze planches originales de bâtiments et de stands inspirées de l’architect
 9. `09_pelipper_post_office.png` — Poste Bekipan
 10. `10_wigglytuff_guild_outpost.png` — Avant-poste de la Guilde Grodoudou
 11. `11_wobbuffet_stand.png` — Stand Qulbutoké : structure et disposition Arcanin conservées à l’identique, avec uniquement le masque et la palette remplacés
-12. `12_eevee_shop.png` — Boutique Évoli (refaite) : tête Évoli symétrique, grandes oreilles triangulaires, col de fourrure crème en lobes arrondis et queue à bout crème ; les yeux reprennent le masque Arcanin à l’identique — amande inclinée cerclée de caramel, **barreaux verticaux sombres sur fond ambré et barre crème en appui, comme une fenêtre à meneaux**, sans pupille ni reflet
+12. `12_eevee_shop.png` — Boutique Évoli (refaite) : tête Évoli symétrique, grandes oreilles triangulaires, col de fourrure crème en lobes arrondis et queue à bout crème ; **les yeux sont ceux de la hutte Arcanin, greffés pixel par pixel** — amande inclinée cerclée de caramel, vitrage prune barré de meneaux caramel, sans pupille ni reflet
 
 Aperçus :
 
@@ -44,7 +44,7 @@ La planche a été refaite avec un générateur d’images à partir de la planc
 1. fond uni détouré par inondation depuis les bords → alpha dur `0 / 255`, aucun halo ;
 2. mise à l’échelle du cadre complet en **338 × 267**, sans déformation : le contenu tombe en `x 29-330`, `y 3-257`, soit aux mêmes marges que la planche Arcanin (`x 30-327`, `y 3-253`) ;
 3. réduction à **32 couleurs** (médiane-cut, sans trame) puis enregistrement en PNG RGBA transparent ;
-4. itérations ciblées sur les yeux uniquement : disques ronds → hachures diagonales → **fenêtre à barreaux** reprise du gros plan des yeux de la hutte Arcanin (crop de référence utilisé comme image guide) ;
+4. **yeux** : le générateur n’a jamais rendu le motif d’origine, ils ont donc été **relevés sur la planche Arcanin puis greffés** (`scripts/greffe_yeux_arcanin.py`) : masque decomposé en trois encres (prune = vitrage, caramel = meneaux et cadre, brun = contour), recalibré par max-pool à la taille de chaque tête, ancien œil effacé par inpainting pour conserver l’ombrage de la fourrure ;
 5. le tout est rejouable avec `scripts/finition_planche.py <planche_generee.png> <sortie.png>`, qui enchaîne les trois premières étapes.
 
 La v1 (masque peint par remap de palette) reste consultable dans l’historique Git, ainsi que `apercu_12_structures.jpg`.
